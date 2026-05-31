@@ -5,7 +5,9 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
   REGION: us-central1
   SERVICE_NAME: flappydog
   ARTIFACT_REGISTRY_REPO: flappydog-repo
@@ -21,11 +23,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate GCP workflow variables
+        run: |
+          test -n "$PROJECT_ID" || { echo "Missing GitHub Actions secret: GCP_PROJECT_ID"; exit 1; }
+          test -n "$WORKLOAD_IDENTITY_PROVIDER" || { echo "Missing GitHub Actions secret: GCP_WORKLOAD_IDENTITY_PROVIDER"; exit 1; }
+          test -n "$SERVICE_ACCOUNT" || { echo "Missing GitHub Actions secret: GCP_SERVICE_ACCOUNT"; exit 1; }
+          case "$WORKLOAD_IDENTITY_PROVIDER" in
+            *YOUR_PROJECT_NUMBER*|*YOUR_POOL*|*YOUR_PROVIDER*)
+              echo "GCP_WORKLOAD_IDENTITY_PROVIDER still contains placeholder text"
+              exit 1
+              ;;
+          esac
+
       - name: Google Auth
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
