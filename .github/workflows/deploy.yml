@@ -5,9 +5,9 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-  SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  WORKLOAD_IDENTITY_PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  SERVICE_ACCOUNT: ${{ vars.GCP_SERVICE_ACCOUNT }}
   REGION: us-central1
   SERVICE_NAME: flappydog
   ARTIFACT_REGISTRY_REPO: flappydog-repo
@@ -25,9 +25,9 @@ jobs:
 
       - name: Validate GCP workflow variables
         run: |
-          test -n "$PROJECT_ID" || { echo "Missing GitHub Actions secret: GCP_PROJECT_ID"; exit 1; }
-          test -n "$WORKLOAD_IDENTITY_PROVIDER" || { echo "Missing GitHub Actions secret: GCP_WORKLOAD_IDENTITY_PROVIDER"; exit 1; }
-          test -n "$SERVICE_ACCOUNT" || { echo "Missing GitHub Actions secret: GCP_SERVICE_ACCOUNT"; exit 1; }
+          test -n "$PROJECT_ID" || { echo "Missing GitHub Actions variable: GCP_PROJECT_ID"; exit 1; }
+          test -n "$WORKLOAD_IDENTITY_PROVIDER" || { echo "Missing GitHub Actions variable: GCP_WORKLOAD_IDENTITY_PROVIDER"; exit 1; }
+          test -n "$SERVICE_ACCOUNT" || { echo "Missing GitHub Actions variable: GCP_SERVICE_ACCOUNT"; exit 1; }
           case "$WORKLOAD_IDENTITY_PROVIDER" in
             *YOUR_PROJECT_NUMBER*|*YOUR_POOL*|*YOUR_PROVIDER*)
               echo "GCP_WORKLOAD_IDENTITY_PROVIDER still contains placeholder text"
