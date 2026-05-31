@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flappy Dog</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5408741906258224" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: background-color 0.8s ease;
+}
+
+body.light { background-color: #87CEEB; }
+body.dark { background-color: #1a1a2e; }
+
+#game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  transition: background-color 0.8s ease;
+}
+
+.light #game-container { background-color: #87CEEB; }
+.dark #game-container { background-color: #16213e; }
+
+canvas {
+  display: block;
+}
+
+#ui-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+#score {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  text-align: center;
+  font-size: 48px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  z-index: 11;
+}
+
+#lives {
+  position: absolute;
+  top: 30px;
+  right: 16px;
+  font-size: 22px;
+  z-index: 11;
+}
+
+#start-screen, #gameover-screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  pointer-events: all;
+}
+
+#start-screen h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+.light #start-screen h1 { color: #fff; }
+.dark #start-screen h1 { color: #f0c040; }
+
+#start-screen p, #gameover-screen p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.light #start-screen p { color: #fff; }
+.dark #start-screen p { color: #ccc; }
+
+.btn {
+  padding: 14px 40px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  background: #f0c040;
+  color: #333;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  pointer-events: all;
+}
+
+.btn:hover { background: #ffd700; }
+
+#final-score {
+  font-size: 60px;
+  font-weight: 900;
+  color: #f0c040;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  margin: 10px 0;
+}
+
+#theme-indicator {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.6;
+  z-index: 11;
+}
+
+.light #theme-indicator { color: #fff; }
+.dark #theme-indicator { color: #888; }
+</style>
+</head>
+<body class="light">
+
+<div id="game-container">
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <div id="ui-overlay">
+    <div id="score">0</div>
+    <div id="lives"></div>
+    <div id="theme-indicator">☀️ light</div>
+  </div>
+
+  <div id="start-screen">
+    <h1>🐶 Flappy Dog</h1>
+    <p>Press SPACE or tap to flap</p>
+    <p>5 lives &mdash; avoid the obstacles!</p>
+    <button class="btn" id="startBtn">Play</button>
+  </div>
+
+  <div id="gameover-screen" style="display:none;">
+    <h1 style="font-size:36px;">Game Over</h1>
+    <div id="final-score">0</div>
+    <p>points</p>
+    <button class="btn" id="restartBtn">Play Again</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width;
+const H = canvas.height;
+
+// UI refs
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const startScreen = document.getElementById('start-screen');
+const gameoverScreen = document.getElementById('gameover-screen');
+const finalScoreEl = document.getElementById('final-score');
+const themeIndicator = document.getElementById('theme-indicator');
+const startBtn = document.getElementById('startBtn');
+const restartBtn = document.getElementById('restartBtn');
+
+// Game state
+let dog, pipes, score, lives, gameRunning, gravity, flapPower;
+let pipeWidth, pipeGap, pipeSpeed, pipeSpawnInterval;
+let lastPipeTime, animFrame;
+let isDark = false;
+let invincible = false;
+let invincibleTimer = 0;
+const INVINCIBLE_DURATION = 1500;
+const INVINCIBLE_FLASH = 150;
+
+// Cats
+let cats, catSpawnInterval, lastCatTime;
+const catColors = [
+  { body: '#f5a623', inner: '#f7c574' },
+  { body: '#8e8e8e', inner: '#b0b0b0' },
+  { body: '#e8e8e8', inner: '#f5f5f5' },
+  { body: '#3a3a3a', inner: '#5a5a5a' },
+  { body: '#d4871c', inner: '#e8a040' },
+];
+
+// Theme
+let themeTimer;
+
+function startThemeCycle() {
+  setInterval(() => {
+    isDark = !isDark;
+    document.body.className = isDark ? 'dark' : 'light';
+    themeIndicator.textContent = isDark ? '🌙 dark' : '☀️ light';
+  }, 20000);
+}
+
+// Dog properties
+function initDog() {
+  dog = {
+    x: 80,
+    y: H / 2,
+    w: 40,
+    h: 40,
+    vy: 0,
+    radius: 20
+  };
+  gravity = 0.25;
+  flapPower = -5.5;
+}
+
+function initGame() {
+  initDog();
+  pipes = [];
+  score = 0;
+  lives = 5;
+  gameRunning = true;
+  pipeWidth = 56;
+  pipeGap = 150;
+  pipeSpeed = 2.8;
+  pipeSpawnInterval = 1600;
+  lastPipeTime = 0;
+  invincible = false;
+  invincibleTimer = 0;
+  cats = [];
+  catSpawnInterval = 2500;
+  lastCatTime = 0;
+  scoreEl.textContent = '0';
+  updateLives();
+}
+
+function updateLives() {
+  let html = '';
+  for (let i = 0; i < lives; i++) html += '❤️';
+  livesEl.textContent = html;
+}
+
+// Flap
+function flap() {
+  if (!gameRunning) return;
+  dog.vy = flapPower;
+}
+
+// Input
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+    e.preventDefault();
+    flap();
+  }
+});
+canvas.addEventListener('click', flap);
+canvas.addEventListener('touchstart', (e) => { e.preventDefault(); flap(); });
+
+// Pipe spawning
+function spawnPipe() {
+  const minY = 80;
+  const maxY = H - pipeGap - 80;
+  const topH = Math.random() * (maxY - minY) + minY;
+  pipes.push({
+    x: W,
+    topH: topH,
+    bottomY: topH + pipeGap,
+    scored: false
+  });
+}
+
+// Cat spawning
+function spawnCat() {
+  const colorIdx = Math.floor(Math.random() * catColors.length);
+  const groundY = H - 50;
+  cats.push({
+    x: W + 20,
+    y: groundY - 14,
+    w: 30,
+    h: 26,
+    color: catColors[colorIdx],
+    tailPhase: Math.random() * Math.PI * 2,
+    blinkTimer: Math.random() * 3000,
+  });
+}
+
+// Draw cat
+function drawCat(c, time) {
+  const cx = c.x;
+  const cy = c.y;
+  const r = 13;
+
+  // Body
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + 4, r * 0.9, r * 0.65, 0, 0, Math.PI * 2);
+  ctx.fillStyle = c.color.body;
+  ctx.fill();
+  ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(cx, cy - 6, r * 0.7, 0, Math.PI * 2);
+  ctx.fillStyle = c.color.body;
+  ctx.fill();
+  ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.15)';
+  ctx.stroke();
+
+  // Ears (triangles)
+  const earSize = 7;
+  ctx.beginPath();
+  ctx.moveTo(cx - 8, cy - 11);
+  ctx.lineTo(cx - 12, cy - 20);
+  ctx.lineTo(cx - 3, cy - 13);
+  ctx.closePath();
+  ctx.fillStyle = c.color.body;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(cx + 8, cy - 11);
+  ctx.lineTo(cx + 12, cy - 20);
+  ctx.lineTo(cx + 3, cy - 13);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Inner ears
+  ctx.beginPath();
+  ctx.moveTo(cx - 8, cy - 11);
+  ctx.lineTo(cx - 11, cy - 17);
+  ctx.lineTo(cx - 4, cy - 12);
+  ctx.closePath();
+  ctx.fillStyle = c.color.inner;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(cx + 8, cy - 11);
+  ctx.lineTo(cx + 11, cy - 17);
+  ctx.lineTo(cx + 4, cy - 12);
+  ctx.closePath();
+  ctx.fill();
+
+  // Eyes
+  const blinking = (time % 4000) > 3800 && (time % 4000 + c.blinkTimer) % 4000 > 3800;
+  const eyeY = cy - 7;
+  const eyeR = blinking ? 0.5 : 2.8;
+
+  ctx.beginPath();
+  ctx.ellipse(cx - 4, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2);
+  ctx.fillStyle = isDark ? '#d4e060' : '#a0c830';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(cx + 4, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pupils (slits)
+  if (!blinking) {
+    ctx.beginPath();
+    ctx.ellipse(cx - 4, eyeY, 0.7, eyeR, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#111';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(cx + 4, eyeY, 0.7, eyeR, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Nose
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - 3);
+  ctx.lineTo(cx - 2, cy - 1);
+  ctx.lineTo(cx + 2, cy - 1);
+  ctx.closePath();
+  ctx.fillStyle = isDark ? '#e88' : '#f89090';
+  ctx.fill();
+
+  // Mouth (w shape)
+  ctx.beginPath();
+  ctx.moveTo(cx - 4, cy + 1);
+  ctx.quadraticCurveTo(cx - 2, cy + 3, cx, cy + 1);
+  ctx.quadraticCurveTo(cx + 2, cy + 3, cx + 4, cy + 1);
+  ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Whiskers
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
+  ctx.lineWidth = 0.8;
+
+  // Left whiskers
+  ctx.beginPath();
+  ctx.moveTo(cx - 7, cy - 3);
+  ctx.lineTo(cx - 16, cy - 6);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx - 7, cy - 1);
+  ctx.lineTo(cx - 16, cy - 1);
+  ctx.stroke();
+
+  // Right whiskers
+  ctx.beginPath();
+  ctx.moveTo(cx + 7, cy - 3);
+  ctx.lineTo(cx + 16, cy - 6);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + 7, cy - 1);
+  ctx.lineTo(cx + 16, cy - 1);
+  ctx.stroke();
+
+  // Tail (wavy)
+  const tailWag = Math.sin(time * 0.005 + c.tailPhase) * 6;
+  ctx.beginPath();
+  ctx.moveTo(cx + r * 0.7, cy + 4);
+  ctx.quadraticCurveTo(cx + r + 6, cy - 4 + tailWag, cx + r + 4, cy - 12 + tailWag);
+  ctx.strokeStyle = c.color.body;
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.lineCap = 'butt';
+}
+
+// Collision
+function checkCollision() {
+  if (invincible) return false;
+
+  // Ground / ceiling
+  if (dog.y - dog.radius < 0 || dog.y + dog.radius > H) return true;
+
+  for (let p of pipes) {
+    // Check if dog is in pipe column
+    if (dog.x + dog.radius > p.x && dog.x - dog.radius < p.x + pipeWidth) {
+      // Check vertical overlap with top or bottom pipe
+      if (dog.y - dog.radius < p.topH || dog.y + dog.radius > p.bottomY) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// Draw dog face
+function drawDog(time) {
+  const cx = dog.x;
+  const cy = dog.y;
+  const r = dog.radius;
+
+  // Invincibility flash
+  if (invincible && Math.floor(time / INVINCIBLE_FLASH) % 2 === 0) {
+    ctx.globalAlpha = 0.3;
+  }
+
+  // Body circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  const bodyGrad = ctx.createRadialGradient(cx - 5, cy - 5, 2, cx, cy, r);
+  bodyGrad.addColorStop(0, isDark ? '#d4a056' : '#c88b3a');
+  bodyGrad.addColorStop(1, isDark ? '#a07030' : '#8B6914');
+  ctx.fillStyle = bodyGrad;
+  ctx.fill();
+  ctx.strokeStyle = isDark ? '#6b5020' : '#5a4010';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Ears
+  ctx.beginPath();
+  ctx.ellipse(cx - r * 0.85, cy - r * 0.5, r * 0.45, r * 0.7, -0.3, 0, Math.PI * 2);
+  ctx.fillStyle = isDark ? '#8a5a28' : '#7a5a28';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(cx + r * 0.85, cy - r * 0.5, r * 0.45, r * 0.7, 0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Inner ears
+  ctx.beginPath();
+  ctx.ellipse(cx - r * 0.85, cy - r * 0.45, r * 0.22, r * 0.4, -0.3, 0, Math.PI * 2);
+  ctx.fillStyle = isDark ? '#e8a0a0' : '#f0b0a0';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(cx + r * 0.85, cy - r * 0.45, r * 0.22, r * 0.4, 0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eyes
+  const eyeOffX = r * 0.35;
+  const eyeOffY = -r * 0.15;
+  const eyeR = r * 0.28;
+
+  // Eye whites
+  ctx.beginPath();
+  ctx.arc(cx - eyeOffX, cy + eyeOffY, eyeR, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx + eyeOffX, cy + eyeOffY, eyeR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pupils
+  const pupilR = eyeR * 0.6;
+  ctx.beginPath();
+  ctx.arc(cx - eyeOffX + 1, cy + eyeOffY + 1, pupilR, 0, Math.PI * 2);
+  ctx.fillStyle = '#222';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx + eyeOffX + 1, cy + eyeOffY + 1, pupilR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eye shine
+  ctx.beginPath();
+  ctx.arc(cx - eyeOffX - 2, cy + eyeOffY - 2, pupilR * 0.4, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx + eyeOffX - 2, cy + eyeOffY - 2, pupilR * 0.4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Nose
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + r * 0.35, r * 0.22, r * 0.16, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#222';
+  ctx.fill();
+
+  // Mouth (smile)
+  ctx.beginPath();
+  ctx.arc(cx, cy + r * 0.3, r * 0.3, 0.2, Math.PI - 0.2);
+  ctx.strokeStyle = '#222';
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+
+  // Tongue
+  ctx.beginPath();
+  ctx.ellipse(cx + 4, cy + r * 0.55, r * 0.12, r * 0.2, 0.2, 0, Math.PI * 2);
+  ctx.fillStyle = isDark ? '#e07070' : '#e87070';
+  ctx.fill();
+
+  ctx.globalAlpha = 1;
+}
+
+// Draw pipes
+function drawPipe(p) {
+  const capH = 26;
+  const capExtra = 6;
+
+  // Top pipe body
+  const tGrad = ctx.createLinearGradient(p.x, 0, p.x + pipeWidth, 0);
+  tGrad.addColorStop(0, isDark ? '#2a7a3a' : '#5cb85c');
+  tGrad.addColorStop(0.5, isDark ? '#3a9a4a' : '#72d472');
+  tGrad.addColorStop(1, isDark ? '#2a7a3a' : '#5cb85c');
+
+  ctx.fillStyle = tGrad;
+  ctx.fillRect(p.x, 0, pipeWidth, p.topH);
+
+  // Top pipe cap
+  ctx.fillStyle = isDark ? '#35a045' : '#60c860';
+  ctx.fillRect(p.x - capExtra, p.topH - capH, pipeWidth + capExtra * 2, capH);
+  ctx.strokeStyle = isDark ? '#1a5a2a' : '#3a8a3a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(p.x - capExtra, p.topH - capH, pipeWidth + capExtra * 2, capH);
+  ctx.strokeRect(p.x, 0, pipeWidth, p.topH);
+
+  // Bottom pipe body
+  ctx.fillStyle = tGrad;
+  ctx.fillRect(p.x, p.bottomY, pipeWidth, H - p.bottomY);
+
+  // Bottom pipe cap
+  ctx.fillStyle = isDark ? '#35a045' : '#60c860';
+  ctx.fillRect(p.x - capExtra, p.bottomY, pipeWidth + capExtra * 2, capH);
+  ctx.strokeStyle = isDark ? '#1a5a2a' : '#3a8a3a';
+  ctx.strokeRect(p.x - capExtra, p.bottomY, pipeWidth + capExtra * 2, capH);
+  ctx.strokeRect(p.x, p.bottomY, pipeWidth, H - p.bottomY);
+}
+
+// Draw background elements
+function drawBackground(time) {
+  // Clouds
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.7)';
+  const cloudYs = [60, 140, 220];
+  for (let i = 0; i < 3; i++) {
+    const bx = ((time * 0.02 + i * 180) % (W + 120)) - 60;
+    drawCloud(bx, cloudYs[i], 30 + i * 8);
+  }
+
+  // Ground
+  const gH = 50;
+  const gY = H - gH;
+  const gGrad = ctx.createLinearGradient(0, gY, 0, H);
+  gGrad.addColorStop(0, isDark ? '#3a6a2a' : '#78c850');
+  gGrad.addColorStop(0.15, isDark ? '#2a4a1a' : '#5aaa30');
+  gGrad.addColorStop(1, isDark ? '#1a2a10' : '#4a8a20');
+  ctx.fillStyle = gGrad;
+  ctx.fillRect(0, gY, W, gH);
+
+  // Ground line
+  ctx.strokeStyle = isDark ? '#4a8a3a' : '#80d060';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, gY);
+  ctx.lineTo(W, gY);
+  ctx.stroke();
+
+  // Ground stripes
+  ctx.fillStyle = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.15)';
+  const stripeOff = (time * 0.05) % 40;
+  for (let x = -stripeOff; x < W; x += 40) {
+    ctx.fillRect(x, gY + 4, 20, gH - 8);
+  }
+}
+
+function drawCloud(x, y, r) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.arc(x + r * 0.8, y - r * 0.3, r * 0.7, 0, Math.PI * 2);
+  ctx.arc(x + r * 1.4, y, r * 0.6, 0, Math.PI * 2);
+  ctx.arc(x - r * 0.5, y + r * 0.1, r * 0.5, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Stars for dark mode
+function drawStars(time) {
+  if (!isDark) return;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  const seed = 42;
+  for (let i = 0; i < 30; i++) {
+    const sx = ((seed * (i + 1) * 7) % W);
+    const sy = ((seed * (i + 1) * 13) % (H - 80));
+    const twinkle = Math.sin(time * 0.003 + i) * 0.5 + 0.5;
+    ctx.globalAlpha = 0.3 + twinkle * 0.5;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 1 + twinkle, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// Main game loop
+let lastTime = 0;
+
+function gameLoop(timestamp) {
+  if (!gameRunning) return;
+
+  const dt = timestamp - lastTime;
+  lastTime = timestamp;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  drawBackground(timestamp);
+  drawStars(timestamp);
+
+  // Physics
+  dog.vy += gravity;
+  if (dog.vy > 6) dog.vy = 6;
+  dog.y += dog.vy;
+
+  // Pipe spawning
+  if (timestamp - lastPipeTime > pipeSpawnInterval) {
+    spawnPipe();
+    lastPipeTime = timestamp;
+  }
+
+  // Cat spawning
+  if (timestamp - lastCatTime > catSpawnInterval) {
+    spawnCat();
+    lastCatTime = timestamp;
+  }
+
+  // Update pipes
+  for (let i = pipes.length - 1; i >= 0; i--) {
+    pipes[i].x -= pipeSpeed;
+
+    // Score
+    if (!pipes[i].scored && pipes[i].x + pipeWidth < dog.x) {
+      pipes[i].scored = true;
+      score++;
+      scoreEl.textContent = score;
+
+      // Slight difficulty increase
+      if (score % 10 === 0) {
+        pipeSpeed = Math.min(pipeSpeed + 0.2, 5);
+        pipeSpawnInterval = Math.max(pipeSpawnInterval - 40, 900);
+      }
+    }
+
+    // Remove off-screen
+    if (pipes[i].x + pipeWidth < -10) {
+      pipes.splice(i, 1);
+    }
+  }
+
+  // Draw pipes
+  for (let p of pipes) {
+    drawPipe(p);
+  }
+
+  // Update cats
+  for (let i = cats.length - 1; i >= 0; i--) {
+    cats[i].x -= pipeSpeed * 0.7;
+    if (cats[i].x < -40) {
+      cats.splice(i, 1);
+    }
+  }
+
+  // Draw cats
+  for (let c of cats) {
+    drawCat(c, timestamp);
+  }
+
+  // Invincibility timer
+  if (invincible) {
+    if (timestamp > invincibleTimer) {
+      invincible = false;
+    }
+  }
+
+  // Cat collision
+  if (!invincible) {
+    for (let c of cats) {
+      const dx = dog.x - c.x;
+      const dy = dog.y - (c.y);
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < dog.radius + 12) {
+        lives--;
+        updateLives();
+        if (lives <= 0) {
+          gameRunning = false;
+          finalScoreEl.textContent = score;
+          gameoverScreen.style.display = 'flex';
+          return;
+        } else {
+          invincible = true;
+          invincibleTimer = timestamp + INVINCIBLE_DURATION;
+          dog.y = H / 2;
+          dog.vy = 0;
+        }
+        break;
+      }
+    }
+  }
+
+  // Collision
+  if (checkCollision()) {
+    lives--;
+    updateLives();
+    if (lives <= 0) {
+      gameRunning = false;
+      finalScoreEl.textContent = score;
+      gameoverScreen.style.display = 'flex';
+      return;
+    } else {
+      invincible = true;
+      invincibleTimer = timestamp + INVINCIBLE_DURATION;
+      dog.y = H / 2;
+      dog.vy = 0;
+    }
+  }
+
+  // Draw dog
+  drawDog(timestamp);
+
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+// Start / restart
+startBtn.addEventListener('click', () => {
+  startScreen.style.display = 'none';
+  initGame();
+  lastTime = performance.now();
+  animFrame = requestAnimationFrame(gameLoop);
+});
+
+restartBtn.addEventListener('click', () => {
+  gameoverScreen.style.display = 'none';
+  initGame();
+  lastTime = performance.now();
+  animFrame = requestAnimationFrame(gameLoop);
+});
+
+// Init
+startThemeCycle();
+initDog();
+</script>
+
+</body>
+</html>
