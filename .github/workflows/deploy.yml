@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_ID: YOUR_PROJECT_ID
+  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
   REGION: us-central1
   SERVICE_NAME: flappydog
   ARTIFACT_REGISTRY_REPO: flappydog-repo
@@ -24,8 +24,8 @@ jobs:
       - name: Google Auth
         uses: google-github-actions/auth@v3
         with:
-          workload_identity_provider: projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/YOUR_POOL/providers/YOUR_PROVIDER
-          service_account: flappydog-deployer@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
@@ -46,7 +46,7 @@ jobs:
         with:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
-          image_name: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/flappydog:latest
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_REPO }}/flappydog:latest
           flags: '--allow-unauthenticated'
 
       - name: Print URL
