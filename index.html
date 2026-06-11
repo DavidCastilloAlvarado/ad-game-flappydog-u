@@ -111,6 +111,18 @@ canvas {
   z-index: 11;
 }
 
+#best-score {
+  position: absolute;
+  top: 84px;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+  z-index: 11;
+}
+
 #lives {
   position: absolute;
   top: 30px;
@@ -169,7 +181,15 @@ canvas {
   font-weight: 900;
   color: #f0c040;
   text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-  margin: 10px 0;
+  margin: 10px 0 2px;
+}
+
+#gameover-best {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  margin: 2px 0 4px;
 }
 
 #theme-indicator {
@@ -180,6 +200,21 @@ canvas {
   font-size: 13px;
   opacity: 0.6;
   z-index: 11;
+}
+
+#new-best {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 0 14px rgba(255,215,0,0.9);
+  margin-bottom: 8px;
+  display: none;
+  animation: pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
 }
 
 .light #theme-indicator { color: #fff; }
@@ -193,6 +228,7 @@ canvas {
 
   <div id="ui-overlay">
     <div id="score">0</div>
+    <div id="best-score">Best: 0</div>
     <div id="lives"></div>
     <div id="theme-indicator">☀️ light</div>
   </div>
@@ -205,8 +241,10 @@ canvas {
   </div>
 
   <div id="gameover-screen" style="display:none;">
+    <div id="new-best">🏆 New Best!</div>
     <h1 style="font-size:36px;">Game Over</h1>
     <div id="final-score">0</div>
+    <div id="gameover-best">Best: 0</div>
     <p>points</p>
     <button class="btn" id="restartBtn">Play Again</button>
   </div>
@@ -224,12 +262,15 @@ const livesEl = document.getElementById('lives');
 const startScreen = document.getElementById('start-screen');
 const gameoverScreen = document.getElementById('gameover-screen');
 const finalScoreEl = document.getElementById('final-score');
+const gameoverBestEl = document.getElementById('gameover-best');
+const newBestEl = document.getElementById('new-best');
 const themeIndicator = document.getElementById('theme-indicator');
 const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
 
 // Game state
 let dog, pipes, score, lives, gameRunning, gravity, flapPower;
+let bestScore = parseInt(localStorage.getItem('flappyDogBest')) || 0;
 let pipeWidth, pipeGap, pipeSpeed, pipeSpawnInterval;
 let lastPipeTime, animFrame;
 let isDark = false;
@@ -290,7 +331,19 @@ function initGame() {
   catSpawnInterval = 2500;
   lastCatTime = 0;
   scoreEl.textContent = '0';
+  gameoverBestEl.textContent = `Best: ${bestScore}`;
+  document.getElementById('best-score').textContent = `Best: ${bestScore}`;
+  newBestEl.style.display = 'none';
   updateLives();
+}
+
+function updateBestScore() {
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem('flappyDogBest', bestScore);
+  }
+  document.getElementById('best-score').textContent = `Best: ${bestScore}`;
+  gameoverBestEl.textContent = `Best: ${bestScore}`;
 }
 
 function updateLives() {
@@ -789,6 +842,10 @@ function gameLoop(timestamp) {
         if (lives <= 0) {
           gameRunning = false;
           finalScoreEl.textContent = score;
+          updateBestScore();
+          if (score === bestScore) {
+            newBestEl.style.display = 'block';
+          }
           gameoverScreen.style.display = 'flex';
           return;
         } else {
@@ -809,6 +866,10 @@ function gameLoop(timestamp) {
     if (lives <= 0) {
       gameRunning = false;
       finalScoreEl.textContent = score;
+      updateBestScore();
+      if (score === bestScore) {
+        newBestEl.style.display = 'block';
+      }
       gameoverScreen.style.display = 'flex';
       return;
     } else {
