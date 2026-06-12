@@ -9,6 +9,7 @@
 <meta name="author" content="David Castillo">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <link rel="canonical" href="https://flappydog.peruf.me/">
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -131,7 +132,7 @@ canvas {
   z-index: 11;
 }
 
-#start-screen, #gameover-screen {
+#start-screen, #gameover-screen, #pause-screen {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
@@ -141,6 +142,24 @@ canvas {
   align-items: center;
   z-index: 20;
   pointer-events: all;
+}
+
+#pause-screen {
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+#pause-screen h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #fff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+#pause-screen p {
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
 #start-screen h1 {
@@ -219,6 +238,81 @@ canvas {
 
 .light #theme-indicator { color: #fff; }
 .dark #theme-indicator { color: #888; }
+
+.info-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  z-index: 25;
+  opacity: 0.7;
+  transition: opacity 0.2s, transform 0.2s;
+  color: #fff;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.info-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: all;
+}
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 320px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  color: #333;
+}
+.dark .modal-content {
+  background: #1a1a2e;
+  color: #eee;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.modal-close:hover {
+  opacity: 1;
+}
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+.modal-content p {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+.modal-content a {
+  color: #007bff;
+  text-decoration: none;
+}
+.dark .modal-content a {
+  color: #4dabf7;
+}
+.modal-content a:hover {
+  text-decoration: underline;
+}
 </style>
 </head>
 <body class="light">
@@ -248,6 +342,26 @@ canvas {
     <p>points</p>
     <button class="btn" id="restartBtn">Play Again</button>
   </div>
+
+  <div id="pause-screen" style="display:none;">
+    <h1>Paused</h1>
+    <p>Press ESC to resume</p>
+  </div>
+
+  <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  </svg>
+
+  <div id="info-modal" class="modal-overlay">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h3>Info</h3>
+      <p><strong>Contact:</strong> David — <a href="mailto:david.castillo.comms.inbox@pm.me">david.castillo.comms.inbox@pm.me</a></p>
+      <p style="font-size: 13px; opacity: 0.8;"><strong>Disclaimer:</strong> Flappy Dog is a free browser-based game. This site may use third-party advertising cookies (such as Google AdSense) to serve personalized ads. By playing, you acknowledge this.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -261,6 +375,7 @@ const scoreEl = document.getElementById('score');
 const livesEl = document.getElementById('lives');
 const startScreen = document.getElementById('start-screen');
 const gameoverScreen = document.getElementById('gameover-screen');
+const pauseScreen = document.getElementById('pause-screen');
 const finalScoreEl = document.getElementById('final-score');
 const gameoverBestEl = document.getElementById('gameover-best');
 const newBestEl = document.getElementById('new-best');
@@ -269,7 +384,7 @@ const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
 
 // Game state
-let dog, pipes, score, lives, gameRunning, gravity, flapPower;
+let dog, pipes, score, lives, gameRunning, gamePaused, gravity, flapPower;
 let bestScore = parseInt(localStorage.getItem('flappyDogBest')) || 0;
 let pipeWidth, pipeGap, pipeSpeed, pipeSpawnInterval;
 let lastPipeTime, animFrame;
@@ -320,6 +435,8 @@ function initGame() {
   score = 0;
   lives = 5;
   gameRunning = true;
+  gamePaused = false;
+  pauseScreen.style.display = 'none';
   pipeWidth = 56;
   pipeGap = 150;
   pipeSpeed = 2.8;
@@ -755,6 +872,7 @@ let lastTime = 0;
 
 function gameLoop(timestamp) {
   if (!gameRunning) return;
+  if (gamePaused) return;
 
   const dt = timestamp - lastTime;
   lastTime = timestamp;
@@ -901,9 +1019,45 @@ restartBtn.addEventListener('click', () => {
   animFrame = requestAnimationFrame(gameLoop);
 });
 
+// Pause functionality
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    if (gameRunning) {
+      gamePaused = !gamePaused;
+      if (gamePaused) {
+        pauseScreen.style.display = 'flex';
+      } else {
+        pauseScreen.style.display = 'none';
+        lastTime = performance.now();
+        animFrame = requestAnimationFrame(gameLoop);
+      }
+    }
+  }
+});
+
 // Init
 startThemeCycle();
 initDog();
+
+// Info Modal
+const infoIcon = document.querySelector('.info-icon');
+const infoModal = document.getElementById('info-modal');
+const modalClose = document.querySelector('.modal-close');
+
+if (infoIcon && infoModal) {
+  infoIcon.addEventListener('click', (e) => {
+    e.stopPropagation();
+    infoModal.style.display = 'flex';
+  });
+  modalClose.addEventListener('click', () => {
+    infoModal.style.display = 'none';
+  });
+  infoModal.addEventListener('click', (e) => {
+    if (e.target === infoModal) {
+      infoModal.style.display = 'none';
+    }
+  });
+}
 </script>
 
 </body>

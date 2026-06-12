@@ -19,8 +19,7 @@ Open `index.html` in any browser. Click, tap, or press Space/W/ArrowUp to flap.
 ### Local Docker
 
 ```bash
-docker build -t flappydog .
-docker run -p 8080:8080 flappydog
+sudo docker compose up --build
 ```
 
 Visit http://localhost:8080
