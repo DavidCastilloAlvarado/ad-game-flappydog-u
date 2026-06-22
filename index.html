@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flappy Dog - Free Browser Arcade Game | Play Now</title>
 <meta name="description" content="Play Flappy Dog, a free browser-based arcade game. Guide your dog through obstacles, dodge pipes, and beat your high score. Fast, simple, and fun on mobile and desktop.">
-<meta name="keywords" content="flappy dog, browser game, arcade game, free online game, casual game, dog game, flappy bird clone, mobile game, puzzle game, fun game">
-<meta name="author" content="David Castillo">
+<meta name="keywords" content="flappy dog, browser game, arcade game, free online game, casual game, dog game, mobile game, puzzle game, fun game">
+<meta name="author" content="the Flappy Dog team">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <link rel="canonical" href="https://flappydog.peruf.me/">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="/styles.css">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Flappy Dog - Free Browser Arcade Game">
 <meta property="og:description" content="Guide your dog through endless obstacles in this fast-paced arcade game. Play free in any browser, no downloads needed.">
@@ -22,17 +22,14 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Flappy Dog game screenshot showing a dog navigating through pipes">
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Flappy Dog - Free Browser Arcade Game">
 <meta name="twitter:description" content="Guide your dog through endless obstacles in this fast-paced arcade game. Play free in any browser.">
 <meta name="twitter:image" content="https://flappydog.peruf.me/og-image.png">
 <meta name="twitter:image:alt" content="Flappy Dog game screenshot showing a dog navigating through pipes">
 
-<!-- Theme color -->
 <meta name="theme-color" content="#87CEEB">
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -51,7 +48,7 @@
   },
   "author": {
     "@type": "Person",
-    "name": "David Castillo"
+    "name": "the Flappy Dog team"
   },
   "datePublished": "2026-05-31",
   "keywords": "flappy dog, arcade game, browser game, casual game, free game"
@@ -59,310 +56,122 @@
 </script>
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5408741906258224" crossorigin="anonymous"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  transition: background-color 0.8s ease;
-}
-
-body.light { background-color: #87CEEB; }
-body.dark { background-color: #1a1a2e; }
-
-#game-container {
-  position: relative;
-  width: 400px;
-  height: 600px;
-  overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  transition: background-color 0.8s ease;
-}
-
-.light #game-container { background-color: #87CEEB; }
-.dark #game-container { background-color: #16213e; }
-
-canvas {
-  display: block;
-}
-
-#ui-overlay {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 10;
-}
-
-#score {
-  position: absolute;
-  top: 30px;
-  width: 100%;
-  text-align: center;
-  font-size: 48px;
-  font-weight: 900;
-  color: #fff;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  z-index: 11;
-}
-
-#best-score {
-  position: absolute;
-  top: 84px;
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: #ffd700;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-  z-index: 11;
-}
-
-#lives {
-  position: absolute;
-  top: 30px;
-  right: 16px;
-  font-size: 22px;
-  z-index: 11;
-}
-
-#start-screen, #gameover-screen, #pause-screen {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-  pointer-events: all;
-}
-
-#pause-screen {
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
-}
-
-#pause-screen h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
-  color: #fff;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
-}
-
-#pause-screen p {
-  font-size: 18px;
-  color: #fff;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-}
-
-#start-screen h1 {
-  font-size: 42px;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
-}
-
-.light #start-screen h1 { color: #fff; }
-.dark #start-screen h1 { color: #f0c040; }
-
-#start-screen p, #gameover-screen p {
-  font-size: 16px;
-  margin-bottom: 20px;
-  opacity: 0.8;
-}
-
-.light #start-screen p { color: #fff; }
-.dark #start-screen p { color: #ccc; }
-
-.btn {
-  padding: 14px 40px;
-  font-size: 20px;
-  font-weight: 700;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  background: #f0c040;
-  color: #333;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  pointer-events: all;
-}
-
-.btn:hover { background: #ffd700; }
-
-#final-score {
-  font-size: 60px;
-  font-weight: 900;
-  color: #f0c040;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-  margin: 10px 0 2px;
-}
-
-#gameover-best {
-  font-size: 28px;
-  font-weight: 900;
-  color: #ffd700;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  margin: 2px 0 4px;
-}
-
-#theme-indicator {
-  position: absolute;
-  bottom: 12px;
-  width: 100%;
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.6;
-  z-index: 11;
-}
-
-#new-best {
-  font-size: 22px;
-  font-weight: 900;
-  color: #ffd700;
-  text-shadow: 0 0 14px rgba(255,215,0,0.9);
-  margin-bottom: 8px;
-  display: none;
-  animation: pulse 0.6s ease-in-out infinite alternate;
-}
-
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
-}
-
-.light #theme-indicator { color: #fff; }
-.dark #theme-indicator { color: #888; }
-
-.info-icon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  z-index: 25;
-  opacity: 0.7;
-  transition: opacity 0.2s, transform 0.2s;
-  color: #fff;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-}
-.info-icon:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  pointer-events: all;
-}
-.modal-content {
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  max-width: 320px;
-  width: 90%;
-  position: relative;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  color: #333;
-}
-.dark .modal-content {
-  background: #1a1a2e;
-  color: #eee;
-}
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 24px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-.modal-close:hover {
-  opacity: 1;
-}
-.modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 20px;
-}
-.modal-content p {
-  margin-bottom: 12px;
-  line-height: 1.5;
-  font-size: 14px;
-}
-.modal-content a {
-  color: #007bff;
-  text-decoration: none;
-}
-.dark .modal-content a {
-  color: #4dabf7;
-}
-.modal-content a:hover {
-  text-decoration: underline;
-}
-</style>
 </head>
 <body class="light">
 
-<div id="game-container">
-  <canvas id="gameCanvas" width="400" height="600"></canvas>
+<nav class="navbar">
+  <a href="/" class="nav-logo">🐶 Flappy Dog</a>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="/" class="nav-link active">Home</a></li>
+    <li><a href="/guide.html" class="nav-link">Guide</a></li>
+    <li><a href="/about.html" class="nav-link">About</a></li>
+    <li><a href="/blog/game-story.html" class="nav-link">Blog</a></li>
+    <li><a href="/contact.html" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
 
-  <div id="ui-overlay">
-    <div id="score">0</div>
-    <div id="best-score">Best: 0</div>
-    <div id="lives"></div>
-    <div id="theme-indicator">☀️ light</div>
-  </div>
+<div class="hero">
+  <h1>🐶 Flappy Dog</h1>
+  <p class="subtitle">Guide a loyal pup through an endless world of pipes and cats. Fast, free, and surprisingly addictive.</p>
+  <a href="#game" class="btn">Play Now</a>
+</div>
 
-  <div id="start-screen">
-    <h1>🐶 Flappy Dog</h1>
-    <p>Press SPACE or tap to flap</p>
-    <p>5 lives &mdash; avoid the obstacles!</p>
-    <button class="btn" id="startBtn">Play</button>
-  </div>
+<div id="game" class="game-section">
+  <div id="game-container">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
 
-  <div id="gameover-screen" style="display:none;">
-    <div id="new-best">🏆 New Best!</div>
-    <h1 style="font-size:36px;">Game Over</h1>
-    <div id="final-score">0</div>
-    <div id="gameover-best">Best: 0</div>
-    <p>points</p>
-    <button class="btn" id="restartBtn">Play Again</button>
-  </div>
+    <div id="ui-overlay">
+      <div id="score">0</div>
+      <div id="best-score">Best: 0</div>
+      <div id="lives"></div>
+      <div id="theme-indicator">☀️ light</div>
+    </div>
 
-  <div id="pause-screen" style="display:none;">
-    <h1>Paused</h1>
-    <p>Press ESC to resume</p>
-  </div>
+    <div id="start-screen">
+      <h1>🐶 Flappy Dog</h1>
+      <p>Press SPACE or tap to flap</p>
+      <p>5 lives &mdash; avoid the obstacles!</p>
+      <button class="game-btn" id="startBtn">Play</button>
+    </div>
 
-  <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="10"></circle>
-    <line x1="12" y1="16" x2="12" y2="12"></line>
-    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-  </svg>
+    <div id="gameover-screen" style="display:none;">
+      <div id="new-best">🏆 New Best!</div>
+      <h1 style="font-size:36px;">Game Over</h1>
+      <div id="final-score">0</div>
+      <div id="gameover-best">Best: 0</div>
+      <p>points</p>
+      <button class="game-btn" id="restartBtn">Play Again</button>
+    </div>
 
-  <div id="info-modal" class="modal-overlay">
-    <div class="modal-content">
-      <span class="modal-close">&times;</span>
-      <h3>Info</h3>
-      <p><strong>Contact:</strong> David — <a href="mailto:david.castillo.comms.inbox@pm.me">david.castillo.comms.inbox@pm.me</a></p>
-      <p style="font-size: 13px; opacity: 0.8;"><strong>Disclaimer:</strong> Flappy Dog is a free browser-based game. This site may use third-party advertising cookies (such as Google AdSense) to serve personalized ads. By playing, you acknowledge this.</p>
+    <div id="pause-screen" style="display:none;">
+      <h1>Paused</h1>
+      <p>Press ESC to resume</p>
+    </div>
+
+    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    </svg>
+
+    <div id="info-modal" class="modal-overlay">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3>Info</h3>
+        <p><strong>Contact:</strong> David — <a href="mailto:david.castillo.comms.inbox@pm.me">david.castillo.comms.inbox@pm.me</a></p>
+        <p style="font-size: 13px; opacity: 0.8;"><strong>Disclaimer:</strong> Flappy Dog is a free browser-based game. This site may use third-party advertising cookies (such as Google AdSense) to serve personalized ads. By playing, you acknowledge this.</p>
+      </div>
     </div>
   </div>
 </div>
+
+<div class="page-content container">
+  <div class="content-card">
+    <h2>How to Play</h2>
+    <p>Flappy Dog is easy to pick up but challenging to master. The premise is simple: your dog is flying through an endless series of pipe gaps, and it is up to you to keep him airborne. Every tap, click, or spacebar press gives your dog an upward flap. Let go, and gravity pulls him downward. The trick is finding the perfect rhythm to weave through the gaps without crashing.</p>
+    <p>You start each round with <strong>5 lives</strong>, represented by hearts in the top-right corner. If your dog hits a pipe, a wall, or an obstacle, you lose one life. After taking damage, your dog gets a brief period of invincibility — during this time he will flash on screen, signaling that he is safe from further harm. Use these moments wisely to recover your position and line up for the next gap.</p>
+    <p>Points are earned by successfully passing through each set of pipes. Your score climbs with every gap cleared, and your <strong>all-time best score</strong> is saved automatically in your browser, so you can compete against yourself across sessions. The game also features a dynamic difficulty curve: every ten points, the pipes speed up and spawn more frequently, keeping the challenge fresh as your skills improve.</p>
+
+    <h2>Game Features</h2>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-icon">❤️</div>
+        <div class="feature-title">5 Lives</div>
+        <p class="feature-desc">Take five hits before game over, with invincibility frames after each collision.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🌗</div>
+        <div class="feature-title">Day & Night</div>
+        <p class="feature-desc">The world shifts between a sunny sky and a starry night every 20 seconds.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🐱</div>
+        <div class="feature-title">Animated Cats</div>
+        <p class="feature-desc">Colorful cats patrol the ground, complete with wagging tails and blinking eyes.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📈</div>
+        <div class="feature-title">Scaling Difficulty</div>
+        <p class="feature-desc">Pipes get faster and spawn quicker as your score climbs higher.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">🐶 Flappy Dog</div>
+    <div class="footer-copy">&copy; 2026 Flappy Dog by David Castillo</div>
+    <div class="footer-links">
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
 
 <script>
 const canvas = document.getElementById('gameCanvas');
@@ -370,7 +179,6 @@ const ctx = canvas.getContext('2d');
 const W = canvas.width;
 const H = canvas.height;
 
-// UI refs
 const scoreEl = document.getElementById('score');
 const livesEl = document.getElementById('lives');
 const startScreen = document.getElementById('start-screen');
@@ -383,7 +191,6 @@ const themeIndicator = document.getElementById('theme-indicator');
 const startBtn = document.getElementById('startBtn');
 const restartBtn = document.getElementById('restartBtn');
 
-// Game state
 let dog, pipes, score, lives, gameRunning, gamePaused, gravity, flapPower;
 let bestScore = parseInt(localStorage.getItem('flappyDogBest')) || 0;
 let pipeWidth, pipeGap, pipeSpeed, pipeSpawnInterval;
@@ -394,7 +201,6 @@ let invincibleTimer = 0;
 const INVINCIBLE_DURATION = 1500;
 const INVINCIBLE_FLASH = 150;
 
-// Cats
 let cats, catSpawnInterval, lastCatTime;
 const catColors = [
   { body: '#f5a623', inner: '#f7c574' },
@@ -404,9 +210,6 @@ const catColors = [
   { body: '#d4871c', inner: '#e8a040' },
 ];
 
-// Theme
-let themeTimer;
-
 function startThemeCycle() {
   setInterval(() => {
     isDark = !isDark;
@@ -415,7 +218,6 @@ function startThemeCycle() {
   }, 20000);
 }
 
-// Dog properties
 function initDog() {
   dog = {
     x: 80,
@@ -469,13 +271,11 @@ function updateLives() {
   livesEl.textContent = html;
 }
 
-// Flap
 function flap() {
   if (!gameRunning) return;
   dog.vy = flapPower;
 }
 
-// Input
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
     e.preventDefault();
@@ -485,7 +285,6 @@ document.addEventListener('keydown', (e) => {
 canvas.addEventListener('click', flap);
 canvas.addEventListener('touchstart', (e) => { e.preventDefault(); flap(); });
 
-// Pipe spawning
 function spawnPipe() {
   const minY = 80;
   const maxY = H - pipeGap - 80;
@@ -498,7 +297,6 @@ function spawnPipe() {
   });
 }
 
-// Cat spawning
 function spawnCat() {
   const colorIdx = Math.floor(Math.random() * catColors.length);
   const groundY = H - 50;
@@ -513,13 +311,11 @@ function spawnCat() {
   });
 }
 
-// Draw cat
 function drawCat(c, time) {
   const cx = c.x;
   const cy = c.y;
   const r = 13;
 
-  // Body
   ctx.beginPath();
   ctx.ellipse(cx, cy + 4, r * 0.9, r * 0.65, 0, 0, Math.PI * 2);
   ctx.fillStyle = c.color.body;
@@ -528,7 +324,6 @@ function drawCat(c, time) {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Head
   ctx.beginPath();
   ctx.arc(cx, cy - 6, r * 0.7, 0, Math.PI * 2);
   ctx.fillStyle = c.color.body;
@@ -536,7 +331,6 @@ function drawCat(c, time) {
   ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.15)';
   ctx.stroke();
 
-  // Ears (triangles)
   const earSize = 7;
   ctx.beginPath();
   ctx.moveTo(cx - 8, cy - 11);
@@ -555,7 +349,6 @@ function drawCat(c, time) {
   ctx.fill();
   ctx.stroke();
 
-  // Inner ears
   ctx.beginPath();
   ctx.moveTo(cx - 8, cy - 11);
   ctx.lineTo(cx - 11, cy - 17);
@@ -571,7 +364,6 @@ function drawCat(c, time) {
   ctx.closePath();
   ctx.fill();
 
-  // Eyes
   const blinking = (time % 4000) > 3800 && (time % 4000 + c.blinkTimer) % 4000 > 3800;
   const eyeY = cy - 7;
   const eyeR = blinking ? 0.5 : 2.8;
@@ -585,7 +377,6 @@ function drawCat(c, time) {
   ctx.ellipse(cx + 4, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Pupils (slits)
   if (!blinking) {
     ctx.beginPath();
     ctx.ellipse(cx - 4, eyeY, 0.7, eyeR, 0, 0, Math.PI * 2);
@@ -597,7 +388,6 @@ function drawCat(c, time) {
     ctx.fill();
   }
 
-  // Nose
   ctx.beginPath();
   ctx.moveTo(cx, cy - 3);
   ctx.lineTo(cx - 2, cy - 1);
@@ -606,7 +396,6 @@ function drawCat(c, time) {
   ctx.fillStyle = isDark ? '#e88' : '#f89090';
   ctx.fill();
 
-  // Mouth (w shape)
   ctx.beginPath();
   ctx.moveTo(cx - 4, cy + 1);
   ctx.quadraticCurveTo(cx - 2, cy + 3, cx, cy + 1);
@@ -615,11 +404,9 @@ function drawCat(c, time) {
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // Whiskers
   ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)';
   ctx.lineWidth = 0.8;
 
-  // Left whiskers
   ctx.beginPath();
   ctx.moveTo(cx - 7, cy - 3);
   ctx.lineTo(cx - 16, cy - 6);
@@ -629,7 +416,6 @@ function drawCat(c, time) {
   ctx.lineTo(cx - 16, cy - 1);
   ctx.stroke();
 
-  // Right whiskers
   ctx.beginPath();
   ctx.moveTo(cx + 7, cy - 3);
   ctx.lineTo(cx + 16, cy - 6);
@@ -639,7 +425,6 @@ function drawCat(c, time) {
   ctx.lineTo(cx + 16, cy - 1);
   ctx.stroke();
 
-  // Tail (wavy)
   const tailWag = Math.sin(time * 0.005 + c.tailPhase) * 6;
   ctx.beginPath();
   ctx.moveTo(cx + r * 0.7, cy + 4);
@@ -651,17 +436,13 @@ function drawCat(c, time) {
   ctx.lineCap = 'butt';
 }
 
-// Collision
 function checkCollision() {
   if (invincible) return false;
 
-  // Ground / ceiling
   if (dog.y - dog.radius < 0 || dog.y + dog.radius > H) return true;
 
   for (let p of pipes) {
-    // Check if dog is in pipe column
     if (dog.x + dog.radius > p.x && dog.x - dog.radius < p.x + pipeWidth) {
-      // Check vertical overlap with top or bottom pipe
       if (dog.y - dog.radius < p.topH || dog.y + dog.radius > p.bottomY) {
         return true;
       }
@@ -670,18 +451,15 @@ function checkCollision() {
   return false;
 }
 
-// Draw dog face
 function drawDog(time) {
   const cx = dog.x;
   const cy = dog.y;
   const r = dog.radius;
 
-  // Invincibility flash
   if (invincible && Math.floor(time / INVINCIBLE_FLASH) % 2 === 0) {
     ctx.globalAlpha = 0.3;
   }
 
-  // Body circle
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   const bodyGrad = ctx.createRadialGradient(cx - 5, cy - 5, 2, cx, cy, r);
@@ -693,7 +471,6 @@ function drawDog(time) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Ears
   ctx.beginPath();
   ctx.ellipse(cx - r * 0.85, cy - r * 0.5, r * 0.45, r * 0.7, -0.3, 0, Math.PI * 2);
   ctx.fillStyle = isDark ? '#8a5a28' : '#7a5a28';
@@ -703,7 +480,6 @@ function drawDog(time) {
   ctx.ellipse(cx + r * 0.85, cy - r * 0.5, r * 0.45, r * 0.7, 0.3, 0, Math.PI * 2);
   ctx.fill();
 
-  // Inner ears
   ctx.beginPath();
   ctx.ellipse(cx - r * 0.85, cy - r * 0.45, r * 0.22, r * 0.4, -0.3, 0, Math.PI * 2);
   ctx.fillStyle = isDark ? '#e8a0a0' : '#f0b0a0';
@@ -713,12 +489,10 @@ function drawDog(time) {
   ctx.ellipse(cx + r * 0.85, cy - r * 0.45, r * 0.22, r * 0.4, 0.3, 0, Math.PI * 2);
   ctx.fill();
 
-  // Eyes
   const eyeOffX = r * 0.35;
   const eyeOffY = -r * 0.15;
   const eyeR = r * 0.28;
 
-  // Eye whites
   ctx.beginPath();
   ctx.arc(cx - eyeOffX, cy + eyeOffY, eyeR, 0, Math.PI * 2);
   ctx.fillStyle = '#fff';
@@ -728,7 +502,6 @@ function drawDog(time) {
   ctx.arc(cx + eyeOffX, cy + eyeOffY, eyeR, 0, Math.PI * 2);
   ctx.fill();
 
-  // Pupils
   const pupilR = eyeR * 0.6;
   ctx.beginPath();
   ctx.arc(cx - eyeOffX + 1, cy + eyeOffY + 1, pupilR, 0, Math.PI * 2);
@@ -739,7 +512,6 @@ function drawDog(time) {
   ctx.arc(cx + eyeOffX + 1, cy + eyeOffY + 1, pupilR, 0, Math.PI * 2);
   ctx.fill();
 
-  // Eye shine
   ctx.beginPath();
   ctx.arc(cx - eyeOffX - 2, cy + eyeOffY - 2, pupilR * 0.4, 0, Math.PI * 2);
   ctx.fillStyle = '#fff';
@@ -749,20 +521,17 @@ function drawDog(time) {
   ctx.arc(cx + eyeOffX - 2, cy + eyeOffY - 2, pupilR * 0.4, 0, Math.PI * 2);
   ctx.fill();
 
-  // Nose
   ctx.beginPath();
   ctx.ellipse(cx, cy + r * 0.35, r * 0.22, r * 0.16, 0, 0, Math.PI * 2);
   ctx.fillStyle = '#222';
   ctx.fill();
 
-  // Mouth (smile)
   ctx.beginPath();
   ctx.arc(cx, cy + r * 0.3, r * 0.3, 0.2, Math.PI - 0.2);
   ctx.strokeStyle = '#222';
   ctx.lineWidth = 1.8;
   ctx.stroke();
 
-  // Tongue
   ctx.beginPath();
   ctx.ellipse(cx + 4, cy + r * 0.55, r * 0.12, r * 0.2, 0.2, 0, Math.PI * 2);
   ctx.fillStyle = isDark ? '#e07070' : '#e87070';
@@ -771,12 +540,10 @@ function drawDog(time) {
   ctx.globalAlpha = 1;
 }
 
-// Draw pipes
 function drawPipe(p) {
   const capH = 26;
   const capExtra = 6;
 
-  // Top pipe body
   const tGrad = ctx.createLinearGradient(p.x, 0, p.x + pipeWidth, 0);
   tGrad.addColorStop(0, isDark ? '#2a7a3a' : '#5cb85c');
   tGrad.addColorStop(0.5, isDark ? '#3a9a4a' : '#72d472');
@@ -785,7 +552,6 @@ function drawPipe(p) {
   ctx.fillStyle = tGrad;
   ctx.fillRect(p.x, 0, pipeWidth, p.topH);
 
-  // Top pipe cap
   ctx.fillStyle = isDark ? '#35a045' : '#60c860';
   ctx.fillRect(p.x - capExtra, p.topH - capH, pipeWidth + capExtra * 2, capH);
   ctx.strokeStyle = isDark ? '#1a5a2a' : '#3a8a3a';
@@ -793,11 +559,9 @@ function drawPipe(p) {
   ctx.strokeRect(p.x - capExtra, p.topH - capH, pipeWidth + capExtra * 2, capH);
   ctx.strokeRect(p.x, 0, pipeWidth, p.topH);
 
-  // Bottom pipe body
   ctx.fillStyle = tGrad;
   ctx.fillRect(p.x, p.bottomY, pipeWidth, H - p.bottomY);
 
-  // Bottom pipe cap
   ctx.fillStyle = isDark ? '#35a045' : '#60c860';
   ctx.fillRect(p.x - capExtra, p.bottomY, pipeWidth + capExtra * 2, capH);
   ctx.strokeStyle = isDark ? '#1a5a2a' : '#3a8a3a';
@@ -805,9 +569,7 @@ function drawPipe(p) {
   ctx.strokeRect(p.x, p.bottomY, pipeWidth, H - p.bottomY);
 }
 
-// Draw background elements
 function drawBackground(time) {
-  // Clouds
   ctx.fillStyle = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.7)';
   const cloudYs = [60, 140, 220];
   for (let i = 0; i < 3; i++) {
@@ -815,7 +577,6 @@ function drawBackground(time) {
     drawCloud(bx, cloudYs[i], 30 + i * 8);
   }
 
-  // Ground
   const gH = 50;
   const gY = H - gH;
   const gGrad = ctx.createLinearGradient(0, gY, 0, H);
@@ -825,7 +586,6 @@ function drawBackground(time) {
   ctx.fillStyle = gGrad;
   ctx.fillRect(0, gY, W, gH);
 
-  // Ground line
   ctx.strokeStyle = isDark ? '#4a8a3a' : '#80d060';
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -833,7 +593,6 @@ function drawBackground(time) {
   ctx.lineTo(W, gY);
   ctx.stroke();
 
-  // Ground stripes
   ctx.fillStyle = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.15)';
   const stripeOff = (time * 0.05) % 40;
   for (let x = -stripeOff; x < W; x += 40) {
@@ -850,7 +609,6 @@ function drawCloud(x, y, r) {
   ctx.fill();
 }
 
-// Stars for dark mode
 function drawStars(time) {
   if (!isDark) return;
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
@@ -867,7 +625,6 @@ function drawStars(time) {
   ctx.globalAlpha = 1;
 }
 
-// Main game loop
 let lastTime = 0;
 
 function gameLoop(timestamp) {
@@ -879,56 +636,46 @@ function gameLoop(timestamp) {
 
   ctx.clearRect(0, 0, W, H);
 
-  // Background
   drawBackground(timestamp);
   drawStars(timestamp);
 
-  // Physics
   dog.vy += gravity;
   if (dog.vy > 6) dog.vy = 6;
   dog.y += dog.vy;
 
-  // Pipe spawning
   if (timestamp - lastPipeTime > pipeSpawnInterval) {
     spawnPipe();
     lastPipeTime = timestamp;
   }
 
-  // Cat spawning
   if (timestamp - lastCatTime > catSpawnInterval) {
     spawnCat();
     lastCatTime = timestamp;
   }
 
-  // Update pipes
   for (let i = pipes.length - 1; i >= 0; i--) {
     pipes[i].x -= pipeSpeed;
 
-    // Score
     if (!pipes[i].scored && pipes[i].x + pipeWidth < dog.x) {
       pipes[i].scored = true;
       score++;
       scoreEl.textContent = score;
 
-      // Slight difficulty increase
       if (score % 10 === 0) {
         pipeSpeed = Math.min(pipeSpeed + 0.2, 5);
         pipeSpawnInterval = Math.max(pipeSpawnInterval - 40, 900);
       }
     }
 
-    // Remove off-screen
     if (pipes[i].x + pipeWidth < -10) {
       pipes.splice(i, 1);
     }
   }
 
-  // Draw pipes
   for (let p of pipes) {
     drawPipe(p);
   }
 
-  // Update cats
   for (let i = cats.length - 1; i >= 0; i--) {
     cats[i].x -= pipeSpeed * 0.7;
     if (cats[i].x < -40) {
@@ -936,19 +683,16 @@ function gameLoop(timestamp) {
     }
   }
 
-  // Draw cats
   for (let c of cats) {
     drawCat(c, timestamp);
   }
 
-  // Invincibility timer
   if (invincible) {
     if (timestamp > invincibleTimer) {
       invincible = false;
     }
   }
 
-  // Cat collision
   if (!invincible) {
     for (let c of cats) {
       const dx = dog.x - c.x;
@@ -977,7 +721,6 @@ function gameLoop(timestamp) {
     }
   }
 
-  // Collision
   if (checkCollision()) {
     lives--;
     updateLives();
@@ -998,13 +741,11 @@ function gameLoop(timestamp) {
     }
   }
 
-  // Draw dog
   drawDog(timestamp);
 
   animFrame = requestAnimationFrame(gameLoop);
 }
 
-// Start / restart
 startBtn.addEventListener('click', () => {
   startScreen.style.display = 'none';
   initGame();
@@ -1019,7 +760,6 @@ restartBtn.addEventListener('click', () => {
   animFrame = requestAnimationFrame(gameLoop);
 });
 
-// Pause functionality
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' || e.key === 'Esc') {
     if (gameRunning) {
@@ -1035,11 +775,9 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Init
 startThemeCycle();
 initDog();
 
-// Info Modal
 const infoIcon = document.querySelector('.info-icon');
 const infoModal = document.getElementById('info-modal');
 const modalClose = document.querySelector('.modal-close');
@@ -1060,5 +798,6 @@ if (infoIcon && infoModal) {
 }
 </script>
 
+<script src="/nav.js"></script>
 </body>
 </html>

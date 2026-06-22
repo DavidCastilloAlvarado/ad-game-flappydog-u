@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How I Made Flappy Dog | Blog</title>
+<meta name="description" content="The development story behind Flappy Dog. Learn about the technology stack, the challenges, and what I learned building a canvas-based arcade game.">
+<meta name="author" content="the Flappy Dog team">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://flappydog.peruf.me/blog/how-made.html">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="/styles.css">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="How I Made Flappy Dog — Blog">
+<meta property="og:description" content="The development story behind Flappy Dog.">
+<meta property="og:url" content="https://flappydog.peruf.me/blog/how-made.html">
+<meta name="theme-color" content="#87CEEB">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5408741906258224" crossorigin="anonymous"></script>
+</head>
+<body class="light">
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">🐶 Flappy Dog</a>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/guide.html" class="nav-link">Guide</a></li>
+    <li><a href="/about.html" class="nav-link">About</a></li>
+    <li><a href="/blog/game-story.html" class="nav-link">Blog</a></li>
+    <li><a href="/contact.html" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-content container">
+  <div class="content-card">
+    <h1>How I Made Flappy Dog</h1>
+    <p class="blog-meta">By the Flappy Dog team &middot; June 2026</p>
+
+    <p>Flappy Dog was born while I was testing local AI models on my own hardware. The game itself took about five prompts to reach its final state before the AdSense review. Five iterations of describing what I wanted, getting code back, testing it, and asking for adjustments. That is the entire development history.</p>
+
+    <h2>The Hardware</h2>
+    <p>The rig runs two NVIDIA RTX 5060 Ti 16GB GPUs. The reason for this choice is simple: VRAM. These cards give you 32GB of total VRAM for a consumer budget, which is enough to run the full Qwen 3.6 family of models and the Gemma 4 family models at Q4 or Q5 quantization with KV cache at 8-bit, supporting context windows up to 120K tokens.</p>
+
+    <p>For this project, Qwen 3.6 27B was the model used. It has SWE-bench level reasoning capabilities, and with the dual-GPU setup and MTP (multi-token prediction), it can reach around 50 tokens per second in generation speed. That is fast enough for real-time coding workflows where you describe a task, get a response, review it, and iterate.</p>
+
+    <h2>The Process</h2>
+    <p>The workflow was straightforward. I gave the model a task description — something like "create a Flappy Bird clone with a dog character, 5 lives, and day/night theming." It produced code. I tested it in the browser. I described what needed to change. It produced updated code. After about five of these rounds, the game was in a state where it was fun to play and visually complete.</p>
+
+    <p>The rest of this website — the About page, the Guide, the blog posts, the strategy tips — is all AI-generated text written to satisfy Google AdSense's content requirements. AdSense requires a certain amount of original text on a site before approving it for ads. The game is the real product. The text exists to keep the site monetized so it can stay online.</p>
+
+    <h2>The Game Code</h2>
+    <p>The game runs entirely on HTML5 Canvas 2D with vanilla JavaScript. The game loop uses <code>requestAnimationFrame</code> and handles gravity, pipe spawning, cat animation, collision detection, and rendering each frame. The dog is drawn with radial gradients and geometric shapes. The cats use sine-wave oscillation for tail animation and timer-based blinking for the eyes. The pipes use linear gradients for cylindrical shading. No images, no sprites, no frameworks.</p>
+
+    <h2>Deployment</h2>
+    <p>Flappy Dog is containerized with Docker and deployed to Google Cloud Run through a GitHub Actions workflow that uses Workload Identity Federation for authentication. The Dockerfile uses an nginx:alpine base image and serves the static files on port 8080.</p>
+
+    <h2>The Point</h2>
+    <p>This project was a test: can a local AI model on consumer hardware produce working, deployable code from a few conversational prompts? The answer is yes. The game works. The site is live. The text is AI-generated filler for AdSense. Everything here, including this sentence, was produced by a local model on two GPU cards sitting on my desk.</p>
+
+    <p>If you want to skip all of this and just play the game, the button is right above. Enjoy.</p>
+
+    <p style="margin-top: 40px;"><a href="/">&larr; Back to Home</a></p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">🐶 Flappy Dog</div>
+    <div class="footer-copy">&copy; 2026 Flappy Dog by David Castillo</div>
+    <div class="footer-links">
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+</body>
+</html>

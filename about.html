@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Flappy Dog | Free Browser Arcade Game</title>
+<meta name="description" content="Learn about Flappy Dog, the free browser arcade game created by the Flappy Dog team. Discover the story, the inspiration, and the features that make it unique.">
+<meta name="author" content="the Flappy Dog team">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://flappydog.peruf.me/about.html">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="/styles.css">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="About Flappy Dog">
+<meta property="og:description" content="Learn about Flappy Dog, the free browser arcade game created by the Flappy Dog team.">
+<meta property="og:url" content="https://flappydog.peruf.me/about.html">
+<meta name="theme-color" content="#87CEEB">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5408741906258224" crossorigin="anonymous"></script>
+</head>
+<body class="light">
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">🐶 Flappy Dog</a>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="/guide.html" class="nav-link">Guide</a></li>
+    <li><a href="/about.html" class="nav-link active">About</a></li>
+    <li><a href="/blog/game-story.html" class="nav-link">Blog</a></li>
+    <li><a href="/contact.html" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-content container">
+  <div class="content-card">
+    <h1>About Flappy Dog</h1>
+
+    <h2>What Is This?</h2>
+    <p>Flappy Dog is a browser-based arcade game where you guide a dog through an endless series of pipe gaps. Tap, click, or press spacebar to flap. Dodge pipes, avoid cats, and try to beat your high score. The game runs entirely in your browser with no downloads, no sign-ups, and no dependencies.</p>
+
+    <p>The game was produced in about five prompts to a local AI model running on consumer hardware. From the first prompt to the final deployed version, the entire game went through five iterations of back-and-forth with the model before the AdSense review. You can read more about the process on the <a href="/blog/how-made.html">development blog</a>.</p>
+
+    <h2>The Game</h2>
+    <p>The dog is drawn as a circle with radial gradients for body shading, two floppy ears, white eyes with dark pupils and specular highlights, a black nose, a curved mouth, and a pink tongue that sticks out slightly. The ears use elliptical shapes with darker fill and inner pink ear details.</p>
+
+    <p>The pipes are rendered as vertical rectangles with linear gradients to simulate cylindrical lighting, topped and bottomed with flared caps. The gap between the top and bottom pipe is randomized each spawn, and the pipes move left across the screen at a constant speed.</p>
+
+    <p>The cats appear on the ground as small rendered figures with rounded bodies, triangular ears with inner ear coloring, oval eyes that blink on a timer, small pink noses, curved mouths, whiskers drawn as thin lines, and animated tails that oscillate using a sine wave. Five cat color variations exist: orange, grey, white, black, and ginger. The cats move slower than the pipes, giving them a lazy, independent presence on the ground.</p>
+
+    <p>The day/night cycle toggles every twenty seconds. During the transition, the sky background shifts, stars appear with individual twinkle rates, cloud opacity changes, ground colors darken, and pipe gradient values shift to match the new palette. The transition is driven by a CSS class toggle on the body element and a boolean flag in the game code.</p>
+
+    <h2>Game Mechanics</h2>
+    <p>You start each run with five lives, shown as hearts in the top-right corner. Colliding with a pipe, the ground, or the ceiling costs one life. After losing a life, the dog enters a 1.5-second invincibility period where he flashes on screen and cannot take further damage. When lives reach zero, the game ends.</p>
+
+    <p>Score increases by one for each pipe gap cleared. Every ten points, pipe speed increases and the spawn interval decreases, making the game progressively harder. Best score is saved to localStorage and persists between browser sessions.</p>
+
+    <p>The game can be paused by pressing Escape, which freezes the game loop and displays a pause overlay. Pressing Escape again resumes from where you left off.</p>
+
+    <h2>How It Works</h2>
+    <p>Flappy Dog is built with plain HTML, CSS, and JavaScript. The game renders on an HTML5 Canvas element using <code>requestAnimationFrame</code> for smooth 60fps gameplay. All visual elements are drawn with Canvas 2D rendering calls — no images, no sprites, no external assets beyond the favicon.</p>
+
+    <p>Your high score is stored locally in your browser using localStorage. It persists between sessions and does not require a server or database. Everything stays on your device.</p>
+
+    <h2>Deployment</h2>
+    <p>The game is containerized with Docker and deployed to Google Cloud Run through a GitHub Actions workflow that uses Workload Identity Federation for authentication. It is served through the domain <strong>flappydog.peruf.me</strong>.</p>
+
+    <h2>Why All This Text?</h2>
+    <p>Most of the text on this website was generated by AI to meet Google AdSense's content requirements. AdSense needs a certain amount of original text on a site before approving it for ads. The game is the real product. The text exists to keep the site monetized so it can stay online. Feel free to skip it and just play.</p>
+
+    <h2>Contact</h2>
+    <p>If you have questions, feedback, or just want to say hello, reach out through the <a href="/contact.html">contact page</a>.</p>
+
+    <p>Thanks for playing.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">🐶 Flappy Dog</div>
+    <div class="footer-copy">&copy; 2026 Flappy Dog by David Castillo</div>
+    <div class="footer-links">
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/nav.js"></script>
+</body>
+</html>
