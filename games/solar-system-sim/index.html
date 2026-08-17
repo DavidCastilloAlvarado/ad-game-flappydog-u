@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <title>Solar System Simulator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -18,9 +19,13 @@
         <p>Keplerian orbits &middot; Halley's Comet at its true position</p>
       </div>
     </div>
-    <div class="clock">
-      <div class="clock-date" id="simDate">—</div>
-      <div class="clock-sub" id="simDateSub">—</div>
+    <div class="topbar-right">
+      <button id="panelToggle" aria-label="Toggle controls">☰</button>
+      <a id="back-arcade" href="/">← arcade</a>
+      <div class="clock">
+        <div class="clock-date" id="simDate">—</div>
+        <div class="clock-sub" id="simDateSub">—</div>
+      </div>
     </div>
   </header>
 

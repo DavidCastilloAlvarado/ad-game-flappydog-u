@@ -85,6 +85,18 @@ body {
   text-shadow: 0 0 6px rgba(255, 226, 61, 0.6);
 }
 
+.hint.exit {
+  color: var(--neon-yellow);
+  text-decoration: none;
+  text-shadow: 0 0 6px rgba(255, 226, 61, 0.6);
+  transition: text-shadow 0.15s, color 0.15s;
+}
+
+.hint.exit:hover {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 12px rgba(53, 240, 255, 0.9);
+}
+
 /* ---------- screen ---------- */
 
 .screen {
@@ -133,8 +145,64 @@ canvas {
   );
 }
 
-@media (max-height: 760px) {
-  .cabinet {
-    transform: scale(0.85);
-  }
+/* ---------- touch controls (shown on touch devices) ---------- */
+
+.touch-controls {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 16px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.tc-group {
+  display: flex;
+  gap: 12px;
+}
+
+.tc-btn {
+  pointer-events: auto;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  font-family: inherit;
+  font-size: 20px;
+  color: var(--neon-cyan);
+  background: rgba(53, 240, 255, 0.08);
+  border: 2px solid rgba(53, 240, 255, 0.5);
+  box-shadow: 0 0 14px rgba(53, 240, 255, 0.25);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tc-btn:active {
+  background: rgba(53, 240, 255, 0.25);
+  box-shadow: 0 0 22px rgba(53, 240, 255, 0.5);
+}
+
+.tc-fire {
+  width: 76px;
+  height: 76px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--neon-magenta);
+  background: rgba(255, 61, 240, 0.08);
+  border-color: rgba(255, 61, 240, 0.5);
+  box-shadow: 0 0 14px rgba(255, 61, 240, 0.25);
+}
+
+.tc-fire:active {
+  background: rgba(255, 61, 240, 0.25);
+  box-shadow: 0 0 22px rgba(255, 61, 240, 0.5);
+}
+
+@media (pointer: coarse) {
+  .touch-controls { display: flex; }
 }

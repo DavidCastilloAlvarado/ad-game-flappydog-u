@@ -1047,3 +1047,50 @@ function frame(now) {
 
 initStars();
 requestAnimationFrame(frame);
+
+/* ---------------- mobile: fit cabinet + touch controls ---------------- */
+
+(function () {
+  const cabinet = document.querySelector(".cabinet");
+
+  function fitCabinet() {
+    const s = Math.min(
+      1,
+      (window.innerWidth - 12) / cabinet.offsetWidth,
+      (window.innerHeight - 12) / cabinet.offsetHeight
+    );
+    cabinet.style.transform = "scale(" + s + ")";
+  }
+  window.addEventListener("resize", fitCabinet);
+  window.addEventListener("orientationchange", fitCabinet);
+  fitCabinet();
+
+  const sendKey = (code, type) =>
+    window.dispatchEvent(new KeyboardEvent(type, { code, bubbles: true }));
+
+  document.querySelectorAll(".tc-btn").forEach((btn) => {
+    const code = btn.dataset.code;
+    const down = (e) => {
+      e.preventDefault();
+      try { btn.setPointerCapture(e.pointerId); } catch (_) { /* stale/synthetic pointer */ }
+      sendKey(code, "keydown");
+    };
+    const up = (e) => {
+      e.preventDefault();
+      sendKey(code, "keyup");
+    };
+    btn.addEventListener("pointerdown", down);
+    btn.addEventListener("pointerup", up);
+    btn.addEventListener("pointercancel", up);
+    btn.addEventListener("contextmenu", (e) => e.preventDefault());
+  });
+
+  // tap the screen to start / restart
+  const screen = document.getElementById("screen");
+  screen.addEventListener("pointerdown", () => {
+    if (state === "menu" || state === "gameover") {
+      sendKey("Space", "keydown");
+      sendKey("Space", "keyup");
+    }
+  });
+})();

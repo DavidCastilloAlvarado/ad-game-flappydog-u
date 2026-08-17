@@ -754,3 +754,15 @@ syncZoomSlider();
 // start with Halley's Comet highlighted so its real position is visible
 showInfo("halley");
 requestAnimationFrame(loop);
+
+/* ---------------- control panel toggle (mobile) ---------------- */
+(function () {
+  const btn = document.getElementById("panelToggle");
+  const panel = document.getElementById("panel");
+  if (!btn || !panel) return;
+  btn.addEventListener("click", () => {
+    panel.classList.toggle("collapsed");
+    btn.textContent = panel.classList.contains("collapsed") ? "☰" : "✕";
+    btn.setAttribute("aria-label", panel.classList.contains("collapsed") ? "Show controls" : "Hide controls");
+  });
+})();

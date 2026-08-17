@@ -83,6 +83,8 @@
       <div id="theme-indicator">☀️ light</div>
     </div>
 
+    <button id="pauseBtn" class="pause-btn" aria-label="Pause">❚❚</button>
+
     <div id="start-screen">
       <h1>🐶 Flappy Dog</h1>
       <p>Press SPACE or tap to flap</p>
@@ -734,20 +736,25 @@ restartBtn.addEventListener('click', () => {
   animFrame = requestAnimationFrame(gameLoop);
 });
 
+function togglePause() {
+  if (!gameRunning) return;
+  gamePaused = !gamePaused;
+  if (gamePaused) {
+    pauseScreen.style.display = 'flex';
+  } else {
+    pauseScreen.style.display = 'none';
+    lastTime = performance.now();
+    animFrame = requestAnimationFrame(gameLoop);
+  }
+}
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' || e.key === 'Esc') {
-    if (gameRunning) {
-      gamePaused = !gamePaused;
-      if (gamePaused) {
-        pauseScreen.style.display = 'flex';
-      } else {
-        pauseScreen.style.display = 'none';
-        lastTime = performance.now();
-        animFrame = requestAnimationFrame(gameLoop);
-      }
-    }
+    togglePause();
   }
 });
+
+document.getElementById('pauseBtn').addEventListener('click', togglePause);
 
 startThemeCycle();
 initDog();

@@ -45,6 +45,47 @@ html, body {
 }
 #topbar > * { pointer-events: auto; }
 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#panelToggle {
+  font-size: 14px;
+  color: var(--text-dim);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 6px 11px;
+  cursor: pointer;
+  display: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+#panelToggle:hover { color: var(--text); border-color: var(--accent); }
+#panel.collapsed { display: none; }
+
+#back-arcade {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  border-radius: 8px;
+  padding: 7px 14px;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+#back-arcade:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(110, 168, 255, 0.35);
+}
+
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand-dot {
   width: 14px; height: 14px; border-radius: 50%;
@@ -296,4 +337,38 @@ input[type="range"]::-moz-range-thumb {
   #infoCard { width: 220px; }
   .brand p { display: none; }
   #legend { display: none; }
+}
+
+@media (max-width: 560px) {
+  #topbar { padding: 10px 12px; gap: 10px; }
+  #panelToggle { display: block; }
+  .brand { gap: 8px; }
+  .brand-dot { width: 10px; height: 10px; }
+  .brand h1 { font-size: 13.5px; }
+  .topbar-right { gap: 8px; }
+  #back-arcade { padding: 6px 10px; font-size: 10.5px; letter-spacing: 1px; }
+  .clock-date { font-size: 13px; }
+  .clock-sub { font-size: 9.5px; }
+
+  /* control panel becomes a collapsible bottom sheet */
+  #panel {
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 10px;
+    width: auto;
+    max-height: 46vh;
+    overflow-y: auto;
+  }
+
+  /* info card becomes a bottom sheet too */
+  #infoCard {
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 10px;
+    width: auto;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
 }

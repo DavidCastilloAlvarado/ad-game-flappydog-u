@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <title>STAR STRIKER — 1986</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -17,6 +18,13 @@
       <canvas id="game" width="480" height="640"></canvas>
       <div class="scanlines"></div>
       <div class="vignette"></div>
+      <div class="touch-controls" id="touchControls">
+        <div class="tc-group">
+          <button class="tc-btn" data-code="ArrowLeft" aria-label="Move left">◀</button>
+          <button class="tc-btn" data-code="ArrowRight" aria-label="Move right">▶</button>
+        </div>
+        <button class="tc-btn tc-fire" data-code="Space" aria-label="Fire">FIRE</button>
+      </div>
     </div>
 
     <div class="cabinet__bottom">
@@ -25,7 +33,7 @@
         <span class="key">SPACE</span> fire
         <span class="key">P</span> pause
       </div>
-      <div class="hint">INSERT COIN — FREE PLAY</div>
+      <a class="hint exit" href="/">◄ EXIT TO ARCADE</a>
     </div>
   </div>
 
