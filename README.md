@@ -4,7 +4,8 @@ A small arcade of free browser games. Plain HTML, CSS and JavaScript — mostly
 generated with a local AI model on consumer hardware. No frameworks, no build
 step, no server: the whole site is one static Docker image.
 
-Served at **flappydog.peruf.me**.
+Served at **peruf.me**. Every game is responsive and touch-enabled, so it
+plays on phones as well as desktops.
 
 ## The games
 
@@ -54,6 +55,10 @@ Visit http://localhost:8080
 CI/CD is already set up: pushing to `main` builds and pushes the Docker
 image (Artifact Registry) and deploys it to Cloud Run via GitHub Actions with
 Workload Identity Federation — no long-lived credentials in the repo.
+
+After every successful deploy the pipeline also creates a git tag and a
+GitHub Release, auto-incrementing the minor version: `v1.0.0`, `v1.1.0`,
+`v1.2.0`, … (one release per deploy to `main`).
 
 The setup script for Workload Identity Federation lives in `scripts/`:
 
