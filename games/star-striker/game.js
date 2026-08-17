@@ -1082,15 +1082,18 @@ requestAnimationFrame(frame);
     btn.addEventListener("pointerdown", down);
     btn.addEventListener("pointerup", up);
     btn.addEventListener("pointercancel", up);
+    btn.addEventListener("pointerleave", up);
     btn.addEventListener("contextmenu", (e) => e.preventDefault());
   });
 
-  // tap the screen to start / restart
+  // tap the screen to start / restart (pointer + click fallback for older mobile browsers)
   const screen = document.getElementById("screen");
-  screen.addEventListener("pointerdown", () => {
+  const tapStart = () => {
     if (state === "menu" || state === "gameover") {
       sendKey("Space", "keydown");
       sendKey("Space", "keyup");
     }
-  });
+  };
+  screen.addEventListener("pointerdown", tapStart);
+  screen.addEventListener("click", tapStart);
 })();

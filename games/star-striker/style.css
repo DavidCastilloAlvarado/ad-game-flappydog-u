@@ -110,6 +110,10 @@ body {
     inset 0 0 40px rgba(0, 0, 0, 0.9),
     0 0 0 2px #000,
     0 0 24px rgba(53, 240, 255, 0.15);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 canvas {

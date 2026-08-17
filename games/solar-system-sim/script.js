@@ -760,9 +760,12 @@ requestAnimationFrame(loop);
   const btn = document.getElementById("panelToggle");
   const panel = document.getElementById("panel");
   if (!btn || !panel) return;
-  btn.addEventListener("click", () => {
-    panel.classList.toggle("collapsed");
-    btn.textContent = panel.classList.contains("collapsed") ? "☰" : "✕";
-    btn.setAttribute("aria-label", panel.classList.contains("collapsed") ? "Show controls" : "Hide controls");
-  });
+  const setCollapsed = (collapsed) => {
+    panel.classList.toggle("collapsed", collapsed);
+    btn.textContent = collapsed ? "☰" : "✕";
+    btn.setAttribute("aria-label", collapsed ? "Show controls" : "Hide controls");
+  };
+  // on phones the panel starts closed so it never blocks the view
+  setCollapsed(window.matchMedia("(max-width: 560px)").matches);
+  btn.addEventListener("click", () => setCollapsed(!panel.classList.contains("collapsed")));
 })();

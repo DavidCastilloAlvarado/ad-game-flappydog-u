@@ -341,7 +341,7 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 560px) {
   #topbar { padding: 10px 12px; gap: 10px; }
-  #panelToggle { display: block; }
+  #panelToggle { display: block; padding: 8px 14px; font-size: 16px; }
   .brand { gap: 8px; }
   .brand-dot { width: 10px; height: 10px; }
   .brand h1 { font-size: 13.5px; }
