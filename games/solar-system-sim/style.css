@@ -332,14 +332,16 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ---------------- responsive ---------------- */
-@media (max-width: 860px), (max-height: 500px) {
+/* phone = narrow, short, FHD-portrait, 21:9-landscape, or any touch device */
+@media (max-width: 860px), (max-height: 500px), (orientation: portrait) and (max-width: 1080px), (orientation: landscape) and (max-height: 1080px) and (min-aspect-ratio: 2/1), (pointer: coarse) and (max-width: 2000px) {
   #panel { width: 210px; }
   #infoCard { width: 220px; }
   .brand p { display: none; }
   #legend { display: none; }
 }
 
-@media (max-width: 600px), (max-height: 500px) {
+/* phone = narrow, short, FHD-portrait, 21:9-landscape, or any touch device */
+@media (max-width: 600px), (max-height: 500px), (orientation: portrait) and (max-width: 1080px), (orientation: landscape) and (max-height: 1080px) and (min-aspect-ratio: 2/1), (pointer: coarse) and (max-width: 2000px) {
   #topbar { padding: 10px 12px; gap: 10px; }
   #panelToggle { display: block; padding: 8px 14px; font-size: 16px; }
   .brand { gap: 8px; }

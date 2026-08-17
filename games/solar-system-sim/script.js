@@ -765,7 +765,11 @@ requestAnimationFrame(loop);
     btn.textContent = collapsed ? "☰" : "✕";
     btn.setAttribute("aria-label", collapsed ? "Show controls" : "Hide controls");
   };
-  // on phones (any orientation) the panel starts closed so it never blocks the view
-  setCollapsed(window.matchMedia("(max-width: 600px), (max-height: 500px)").matches);
+  // on phones (any orientation, any browser scaling) the panel starts closed so it never blocks the view
+  setCollapsed(
+    window.matchMedia(
+      "(max-width: 600px), (max-height: 500px), (orientation: portrait) and (max-width: 1080px), (orientation: landscape) and (max-height: 1080px) and (min-aspect-ratio: 2/1), (pointer: coarse) and (max-width: 2000px)"
+    ).matches
+  );
   btn.addEventListener("click", () => setCollapsed(!panel.classList.contains("collapsed")));
 })();

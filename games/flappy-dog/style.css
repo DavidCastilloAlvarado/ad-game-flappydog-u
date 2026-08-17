@@ -584,7 +584,8 @@ li { margin-bottom: 8px; }
   .content-card { padding: 20px; }
 }
 
-@media (max-width: 480px), (max-height: 500px) {
+/* phone = narrow, short, FHD-portrait, 21:9-landscape, or any touch device */
+@media (max-width: 480px), (max-height: 500px), (orientation: portrait) and (max-width: 1080px), (orientation: landscape) and (max-height: 1080px) and (min-aspect-ratio: 2/1), (pointer: coarse) and (max-width: 2000px) {
   .navbar { padding: 10px 16px; height: 48px; }
   .hero { padding: 12px 0 8px; }
   .hero .logo { width: 20px; height: 20px; }

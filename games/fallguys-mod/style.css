@@ -224,7 +224,8 @@ button:active { transform: translateY(1px); }
 .best-line span { font-weight: 700; color: #ffd166; }
 
 /* ---------- mobile ---------- */
-@media (max-width: 600px), (max-height: 500px) {
+/* phone = narrow, short, FHD-portrait, 21:9-landscape, or any touch device */
+@media (max-width: 600px), (max-height: 500px), (orientation: portrait) and (max-width: 1080px), (orientation: landscape) and (max-height: 1080px) and (min-aspect-ratio: 2/1), (pointer: coarse) and (max-width: 2000px) {
   #hud { padding: 12px 12px; gap: 6px; }
   .hud-box {
     font-size: 15px;
