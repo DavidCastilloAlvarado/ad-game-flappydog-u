@@ -765,7 +765,7 @@ requestAnimationFrame(loop);
     btn.textContent = collapsed ? "☰" : "✕";
     btn.setAttribute("aria-label", collapsed ? "Show controls" : "Hide controls");
   };
-  // on phones the panel starts closed so it never blocks the view
-  setCollapsed(window.matchMedia("(max-width: 560px)").matches);
+  // on phones (any orientation) the panel starts closed so it never blocks the view
+  setCollapsed(window.matchMedia("(max-width: 600px), (max-height: 500px)").matches);
   btn.addEventListener("click", () => setCollapsed(!panel.classList.contains("collapsed")));
 })();

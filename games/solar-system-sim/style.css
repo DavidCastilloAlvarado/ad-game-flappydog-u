@@ -332,14 +332,14 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ---------------- responsive ---------------- */
-@media (max-width: 860px) {
+@media (max-width: 860px), (max-height: 500px) {
   #panel { width: 210px; }
   #infoCard { width: 220px; }
   .brand p { display: none; }
   #legend { display: none; }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 600px), (max-height: 500px) {
   #topbar { padding: 10px 12px; gap: 10px; }
   #panelToggle { display: block; padding: 8px 14px; font-size: 16px; }
   .brand { gap: 8px; }
