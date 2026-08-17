@@ -1,18 +1,43 @@
-# Flappy Dog
+# Peruf Arcade
 
-A browser-based Flappy Bird clone featuring a dog face, 5 lives, and dynamic theming.
+A small arcade of free browser games. Plain HTML, CSS and JavaScript — mostly
+generated with a local AI model on consumer hardware. No frameworks, no build
+step, no server: the whole site is one static Docker image.
 
-## Features
+Served at **flappydog.peruf.me**.
 
-- Classic Flappy Bird gameplay with a dog character
-- 5 lives system with invincibility frames
-- Auto-switching light/dark theme every 20 seconds
-- Animated cats on the ground
-- Difficulty increases as you score
+## The games
+
+Every game lives in `games/` as its own self-contained subdirectory.
+
+| Game | Path | What it is |
+| --- | --- | --- |
+| 🐶 Flappy Dog | `games/flappy-dog/` | One-button arcade action: pipes, cats, 5 lives, day/night cycle, scaling difficulty |
+| 🚀 Star Striker | `games/star-striker/` | Retro 1986-style shooter, arcade-cabinet chrome with scanlines |
+| 🪐 Solar System Simulator | `games/solar-system-sim/` | Real-time Keplerian orbital simulation, Halley's Comet at true position |
+| 🫘 Bean Dash | `games/fallguys-mod/` | Fall Guys-style 3-lane obstacle runner (Three.js) |
+
+## Structure
+
+```
+index.html          arcade hub (game cards + links)
+about.html          about the arcade
+guide.html          Flappy Dog strategy guide
+blog/               game stories & dev log
+games/              one subfolder per game
+styles.css          shared hub / page styles (gaming-coder palette)
+nav.js              mobile nav toggle
+nginx.conf          nginx site config
+Dockerfile          nginx:alpine image
+```
 
 ## Play
 
-Open `index.html` in any browser. Click, tap, or press Space/W/ArrowUp to flap.
+Open `index.html` in any browser, or serve the folder:
+
+```bash
+python3 -m http.server 8080
+```
 
 ## Deploy
 
@@ -26,82 +51,20 @@ Visit http://localhost:8080
 
 ### Google Cloud Run
 
-This repo includes a setup script for GitHub OIDC Workload Identity Federation.
+CI/CD is already set up: pushing to `main` builds and pushes the Docker
+image (Artifact Registry) and deploys it to Cloud Run via GitHub Actions with
+Workload Identity Federation — no long-lived credentials in the repo.
 
-See `scripts/README.md` for the full setup details.
-
-Built-in help is also available:
+The setup script for Workload Identity Federation lives in `scripts/`:
 
 ```bash
 ./scripts/create-github-wif.sh --help
 ```
 
-Basic usage:
-
-```bash
-./scripts/create-github-wif.sh \
-  --project-id YOUR_PROJECT_ID \
-  --project-number YOUR_PROJECT_NUMBER \
-  --pool-id github \
-  --provider-id github-flappydog \
-  --service-account flappydog-deployer \
-  --repo https://github.com/YOUR_ORG/YOUR_REPO
-```
-
-After the script finishes, use the printed values in `.github/workflows/deploy.yml`:
-
-- `workload_identity_provider`
-- `service_account`
-
-You still need to grant the deploy service account the product roles it needs, for example:
-
-- `roles/run.admin`
-- `roles/artifactregistry.writer`
-
-1. Create a Google Cloud project
-2. Enable Cloud Run, Artifact Registry, and IAM APIs
-3. Create an Artifact Registry repository: `gcloud artifacts repositories create flappydog-repo --location=us-central1 --repository-format=docker`
-4. Set up Workload Identity Federation between GitHub and GCP:
-
-```bash
-gcloud iam workload-identity-pools create "github" \
-  --project="YOUR_PROJECT_ID" \
-  --location="global" \
-  --display-name="GitHub Actions Pool"
-
-gcloud iam workload-identity-pools providers create-oidc "my-repo" \
-  --project="YOUR_PROJECT_ID" \
-  --location="global" \
-  --workload-identity-pool="github" \
-  --display-name="My GitHub repo Provider" \
-  --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository,attribute.repository_owner=assertion.repository_owner" \
-  --attribute-condition="assertion.repository_owner == 'YOUR_GITHUB_ORG'" \
-  --issuer-uri="https://token.actions.githubusercontent.com"
-```
-
-5. Create a service account and grant permissions:
-
-```bash
-gcloud iam service-accounts create "flappydog-deployer" \
-  --project "YOUR_PROJECT_ID"
-
-gcloud iam service-accounts add-iam-policy-binding "flappydog-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
-  --project "YOUR_PROJECT_ID" \
-  --role="roles/iam.workloadIdentityUser" \
-  --member="principalSet://iam.googleapis.com/YOUR_WORKLOAD_IDENTITY_POOL_ID/attribute.repository/YOUR_GITHUB_ORG/YOUR_REPO"
-
-gcloud projects add-iam-policy-binding "YOUR_PROJECT_ID" \
-  --member="serviceAccount:flappydog-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/run.admin"
-
-gcloud projects add-iam-policy-binding "YOUR_PROJECT_ID" \
-  --member="serviceAccount:flappydog-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
-  --role="roles/artifactregistry.writer"
-```
-
-6. Update `.github/workflows/deploy.yml` with your project details
-7. Push to main branch
+See `scripts/README.md` for the full setup details, and
+`.github/workflows/deploy.yml` for the pipeline.
 
 ## Monetization
 
-Includes Google AdSense integration. Replace the publisher ID in `index.html` with your own.
+Includes Google AdSense integration (publisher ID in each page's `<head>`).
+Replace it with your own if the site is yours.

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Bean Dash — a Fall Guys style 3-lane obstacle runner. Jump, slide and weave through the chaos.">
+  <meta name="theme-color" content="#0e1116">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='44' fill='%23ef476f'/%3E%3Ccircle cx='34' cy='44' r='9' fill='white'/%3E%3Ccircle cx='66' cy='44' r='9' fill='white'/%3E%3Ccircle cx='34' cy='44' r='4' fill='%2314181f'/%3E%3Ccircle cx='66' cy='44' r='4' fill='%2314181f'/%3E%3Cpath d='M30 66 Q50 80 70 66' stroke='%2314181f' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <title>Bean Dash — obstacle runner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="hud">
+    <div class="hud-box" id="score-box">SCORE <span id="score">0</span></div>
+    <div class="hud-box coin-box" id="coin-box"><span class="coin-dot"></span><span id="coins">0</span></div>
+    <div class="hud-box" id="best-box">BEST <span id="best">0</span></div>
+    <div class="hud-box" id="speed-box"><span id="speed">0</span><span class="unit">km/h</span></div>
+  </div>
+
+  <div id="count"></div>
+
+  <div id="overlay" class="overlay show">
+    <div class="panel">
+      <h1>BEAN&nbsp;DASH</h1>
+      <p class="sub">Outrun the chaos. Jump, slide and weave through the obstacles.</p>
+      <div class="controls">
+        <div><kbd>A</kbd> <kbd>D</kbd> or <kbd>←</kbd> <kbd>→</kbd> &nbsp;switch lane</div>
+        <div><kbd>W</kbd> <kbd>↑</kbd> <kbd>Space</kbd> &nbsp;jump</div>
+        <div><kbd>S</kbd> <kbd>↓</kbd> &nbsp;slide</div>
+        <div><kbd>Esc</kbd> &nbsp;pause / resume</div>
+      </div>
+      <button id="start-btn">START RUN</button>
+      <p class="hint">…or press Space / tap</p>
+    </div>
+  </div>
+
+  <div id="pause" class="overlay">
+    <div class="panel">
+      <h1>PAUSED</h1>
+      <p class="hint">press ESC or tap to resume</p>
+    </div>
+  </div>
+
+  <div id="gameover" class="overlay">
+    <div class="panel">
+      <h1>WIPED&nbsp;OUT</h1>
+      <p class="sub">final score</p>
+      <div class="final-score"><span id="final-score">0</span></div>
+      <p class="best-line">best: <span id="final-best">0</span></p>
+      <button id="restart-btn">RUN AGAIN</button>
+      <p class="hint">…or press R</p>
+    </div>
+  </div>
+
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# version control (including nested repos inside games/)
+.git
+**/.git/
+.github/
+
+# dev / tooling
+.opencode/
+.playwright/
+.playwright-cli/
+specifications/
+scripts/
+node_modules/
+
+# docs & misc
+*.md
+*.log
+.DS_Store
+Thumbs.db
+
+# docker files
+Dockerfile
+docker-compose.yml
+.dockerignore

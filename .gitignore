@@ -1,6 +1,9 @@
 .DS_Store
 Thumbs.db
 
+# nested git repos (e.g. games/fallguys-mod)
+**/.git/
+
 .vscode/
 .idea/
 

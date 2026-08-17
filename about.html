@@ -3,89 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Flappy Dog | Free Browser Arcade Game</title>
-<meta name="description" content="Learn about Flappy Dog, the free browser arcade game created by the Flappy Dog team. Discover the story, the inspiration, and the features that make it unique.">
-<meta name="author" content="the Flappy Dog team">
+<title>About | Peruf Arcade — Free Browser Games</title>
+<meta name="description" content="Who builds these games and how. A look behind the arcade: one developer, a local AI model on consumer hardware, plain web tech, and a Docker image shipped to the cloud.">
+<meta name="author" content="David Castillo">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://flappydog.peruf.me/about.html">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="stylesheet" href="/styles.css">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="About Flappy Dog">
-<meta property="og:description" content="Learn about Flappy Dog, the free browser arcade game created by the Flappy Dog team.">
+<meta property="og:title" content="About — Peruf Arcade">
+<meta property="og:description" content="One developer, a local AI model, plain HTML/CSS/JS, and a Docker image. This is how the arcade is made.">
 <meta property="og:url" content="https://flappydog.peruf.me/about.html">
-<meta name="theme-color" content="#87CEEB">
+<meta name="theme-color" content="#0a0e16">
 
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5408741906258224" crossorigin="anonymous"></script>
 </head>
-<body class="light">
+<body>
 
 <nav class="navbar">
-  <a href="/" class="nav-logo">🐶 Flappy Dog</a>
+  <a href="/" class="nav-logo"><span class="logo-dim">~/</span>peruf-arcade</a>
   <button class="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <ul class="nav-links">
-    <li><a href="/" class="nav-link">Home</a></li>
-    <li><a href="/guide.html" class="nav-link">Guide</a></li>
-    <li><a href="/about.html" class="nav-link active">About</a></li>
-    <li><a href="/blog/game-story.html" class="nav-link">Blog</a></li>
-    <li><a href="/contact.html" class="nav-link">Contact</a></li>
+    <li><a href="/" class="nav-link">home</a></li>
+    <li><a href="/#games" class="nav-link">games</a></li>
+    <li><a href="/about.html" class="nav-link active">about</a></li>
+    <li><a href="/blog/game-story.html" class="nav-link">blog</a></li>
+    <li><a href="/contact.html" class="nav-link">contact</a></li>
   </ul>
 </nav>
 
 <div class="page-content container">
   <div class="content-card">
-    <h1>About Flappy Dog</h1>
+    <h1>about</h1>
+    <p class="blog-meta">the short version: free browser games, one developer, and a lot of local AI</p>
 
-    <h2>What Is This?</h2>
-    <p>Flappy Dog is a browser-based arcade game where you guide a dog through an endless series of pipe gaps. Tap, click, or press spacebar to flap. Dodge pipes, avoid cats, and try to beat your high score. The game runs entirely in your browser with no downloads, no sign-ups, and no dependencies.</p>
+    <h2>What Is This Place?</h2>
+    <p>This is an arcade — not the coin-operated, sticky-floor kind, but the browser kind. It is a small, growing collection of free games that run entirely inside your browser. No downloads, no installs, no accounts, no build steps. You open a page, you hit play, and the game is running.</p>
 
-    <p>The game was produced in about five prompts to a local AI model running on consumer hardware. From the first prompt to the final deployed version, the entire game went through five iterations of back-and-forth with the model before the AdSense review. You can read more about the process on the <a href="/blog/how-made.html">development blog</a>.</p>
+    <p>The current lineup: <a href="/games/flappy-dog/">Flappy Dog</a>, <a href="/games/star-striker/">Star Striker</a>, <a href="/games/solar-system-sim/">Solar System Simulator</a> and <a href="/games/fallguys-mod/">Bean Dash</a>. The shelf is not finished — when a new game makes it through testing, it gets its own page and a card on the home screen. The whole collection lives in a single <code>games/</code> folder, one subdirectory per game.</p>
 
-    <h2>The Game</h2>
-    <p>The dog is drawn as a circle with radial gradients for body shading, two floppy ears, white eyes with dark pupils and specular highlights, a black nose, a curved mouth, and a pink tongue that sticks out slightly. The ears use elliptical shapes with darker fill and inner pink ear details.</p>
+    <h2>Who Is Behind It?</h2>
+    <p>The games are built by David, a developer who favors small, fast, single-purpose projects over sprawling ones. The common thread across the arcade is the stack: plain HTML, CSS and JavaScript. No frameworks, no build tools, no game engines — with one admitted exception, since Bean Dash leans on Three.js to render its 3D chaos. Each game is a handful of files in a folder, served statically. That constraint is not an accident; it is the point. Small projects stay fast to ship, fast to host, and fast to understand when something breaks.</p>
 
-    <p>The pipes are rendered as vertical rectangles with linear gradients to simulate cylindrical lighting, topped and bottomed with flared caps. The gap between the top and bottom pipe is randomized each spawn, and the pipes move left across the screen at a constant speed.</p>
+    <p>What makes these projects a little unusual is the process. Most of the code — the games themselves, and most of the text on this site — is generated by a local AI model running on consumer hardware, not by a cloud API. The workflow is a conversation: describe what should happen, let the model draft it, read the output with a critical eye, ask for changes, and repeat until the result is worth keeping. The human part is deciding what to build, reviewing every line, and knowing when "good enough" has actually been reached.</p>
 
-    <p>The cats appear on the ground as small rendered figures with rounded bodies, triangular ears with inner ear coloring, oval eyes that blink on a timer, small pink noses, curved mouths, whiskers drawn as thin lines, and animated tails that oscillate using a sine wave. Five cat color variations exist: orange, grey, white, black, and ginger. The cats move slower than the pipes, giving them a lazy, independent presence on the ground.</p>
+    <p>Flappy Dog was the first project to go the full distance, from an empty folder to a deployed, monetized product in about five prompts. If you want the complete story — including the failures along the way — the <a href="/blog/how-made.html">development blog</a> has it.</p>
 
-    <p>The day/night cycle toggles every twenty seconds. During the transition, the sky background shifts, stars appear with individual twinkle rates, cloud opacity changes, ground colors darken, and pipe gradient values shift to match the new palette. The transition is driven by a CSS class toggle on the body element and a boolean flag in the game code.</p>
+    <h2>The Games</h2>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🐶</div>
+        <div class="feature-title">Flappy Dog</div>
+        <p class="feature-desc">The original. One-button arcade action with five lives, a day/night cycle, animated cats, and a difficulty curve that ramps as you score.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-title">Star Striker</div>
+        <p class="feature-desc">A retro shooter dressed as a 1986 arcade cabinet. Scanlines, vignette, and a swarm of enemies that does not slow down.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🪐</div>
+        <div class="feature-title">Solar System</div>
+        <p class="feature-desc">A real-time orbital simulation. Keplerian mechanics, moons, and Halley's Comet plotted at its true position — time-warp it as far as you like.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🫘</div>
+        <div class="feature-title">Bean Dash</div>
+        <p class="feature-desc">A 3D lane runner in the style of Fall Guys. Jump, slide and weave through accelerating chaos while grabbing coins on the way.</p>
+      </div>
+    </div>
 
-    <h2>Game Mechanics</h2>
-    <p>You start each run with five lives, shown as hearts in the top-right corner. Colliding with a pipe, the ground, or the ceiling costs one life. After losing a life, the dog enters a 1.5-second invincibility period where he flashes on screen and cannot take further damage. When lives reach zero, the game ends.</p>
+    <h2>How It Is Built and Deployed</h2>
+    <p>Everything here is static: HTML, CSS and JavaScript served by nginx from a Docker image. The pipeline is fully automated — a GitHub Actions workflow builds and pushes the container image on every commit to <code>main</code>, then deploys it to Google Cloud Run using Workload Identity Federation, so no long-lived credentials ever sit in the repository or the pipeline. The whole site, every game included, ships as one image and is served at <strong>flappydog.peruf.me</strong>.</p>
 
-    <p>Score increases by one for each pipe gap cleared. Every ten points, pipe speed increases and the spawn interval decreases, making the game progressively harder. Best score is saved to localStorage and persists between browser sessions.</p>
+    <p>Runtime state stays on your machine. High scores live in your browser's localStorage, your settings live on your device, and nothing about how you play is sent anywhere. When a page shows ads through Google AdSense, that is the only thing that leaves your browser.</p>
 
-    <p>The game can be paused by pressing Escape, which freezes the game loop and displays a pause overlay. Pressing Escape again resumes from where you left off.</p>
-
-    <h2>How It Works</h2>
-    <p>Flappy Dog is built with plain HTML, CSS, and JavaScript. The game renders on an HTML5 Canvas element using <code>requestAnimationFrame</code> for smooth 60fps gameplay. All visual elements are drawn with Canvas 2D rendering calls — no images, no sprites, no external assets beyond the favicon.</p>
-
-    <p>Your high score is stored locally in your browser using localStorage. It persists between sessions and does not require a server or database. Everything stays on your device.</p>
-
-    <h2>Deployment</h2>
-    <p>The game is containerized with Docker and deployed to Google Cloud Run through a GitHub Actions workflow that uses Workload Identity Federation for authentication. It is served through the domain <strong>flappydog.peruf.me</strong>.</p>
-
-    <h2>Why All This Text?</h2>
-    <p>Most of the text on this website was generated by AI to meet Google AdSense's content requirements. AdSense needs a certain amount of original text on a site before approving it for ads. The game is the real product. The text exists to keep the site monetized so it can stay online. Feel free to skip it and just play.</p>
+    <h2>Why Is There This Much Text?</h2>
+    <p>A practical one: Google AdSense wants a site to carry a meaningful amount of original content before it approves it for ads. The games are the real product; the words exist to keep the site monetized so it can stay online for free. If you came here to play, you are allowed to skip the reading and hit the play button — the text will still be here when you get back.</p>
 
     <h2>Contact</h2>
-    <p>If you have questions, feedback, or just want to say hello, reach out through the <a href="/contact.html">contact page</a>.</p>
+    <p>Questions, bug reports, feature ideas, or a high score you are proud of: <a href="/contact.html">the contact page</a> has the email address. Everything else, the arcade itself.</p>
 
-    <p>Thanks for playing.</p>
+    <p>Thanks for stopping by. Now go break some high scores.</p>
   </div>
 </div>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-brand">🐶 Flappy Dog</div>
-    <div class="footer-copy">&copy; 2026 Flappy Dog by David Castillo</div>
+    <div class="footer-brand"><span class="logo-dim">~/</span>peruf-arcade</div>
+    <div class="footer-copy">&copy; 2026 peruf arcade — built by David Castillo, powered by local AI</div>
     <div class="footer-links">
-      <a href="/privacy.html">Privacy Policy</a>
-      <a href="/terms.html">Terms of Service</a>
-      <a href="/contact.html">Contact</a>
+      <a href="/privacy.html">privacy</a>
+      <a href="/terms.html">terms</a>
+      <a href="/contact.html">contact</a>
     </div>
   </div>
 </footer>

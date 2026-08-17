@@ -10,5 +10,6 @@ COPY styles.css /usr/share/nginx/html/styles.css
 COPY nav.js /usr/share/nginx/html/nav.js
 COPY favicon.png /usr/share/nginx/html/favicon.png
 COPY blog/ /usr/share/nginx/html/blog/
+COPY games/ /usr/share/nginx/html/games/
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,140 @@
+/* ============ STAR STRIKER — retro arcade cabinet ============ */
+
+:root {
+  --bg: #05060f;
+  --cabinet: #10121f;
+  --cabinet-edge: #1c2038;
+  --neon-cyan: #35f0ff;
+  --neon-magenta: #ff3df0;
+  --neon-yellow: #ffe23d;
+  --text-dim: #5a6285;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #101433 0%, transparent 60%),
+    var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--text-dim);
+  overflow: hidden;
+}
+
+/* ---------- cabinet ---------- */
+
+.cabinet {
+  background: linear-gradient(180deg, var(--cabinet) 0%, #0b0d18 100%);
+  border: 1px solid var(--cabinet-edge);
+  border-radius: 14px;
+  padding: 14px 18px 12px;
+  box-shadow:
+    0 0 0 4px #06070d,
+    0 0 60px rgba(53, 240, 255, 0.08),
+    0 30px 80px rgba(0, 0, 0, 0.8);
+}
+
+.cabinet__top,
+.cabinet__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.cabinet__top {
+  padding: 2px 4px 10px;
+}
+
+.cabinet__brand {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(53, 240, 255, 0.8);
+}
+
+.cabinet__model {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px rgba(255, 61, 240, 0.7);
+}
+
+.cabinet__bottom {
+  padding: 10px 4px 0;
+  gap: 18px;
+}
+
+.hint {
+  letter-spacing: 1px;
+  font-size: 10px;
+}
+
+.key {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 6px rgba(255, 226, 61, 0.6);
+}
+
+/* ---------- screen ---------- */
+
+.screen {
+  position: relative;
+  width: 480px;
+  height: 640px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    0 0 0 2px #000,
+    0 0 24px rgba(53, 240, 255, 0.15);
+}
+
+canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* CRT scanlines */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* subtle screen glow + curvature darkening */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+@media (max-height: 760px) {
+  .cabinet {
+    transform: scale(0.85);
+  }
+}

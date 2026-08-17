@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar System Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <!-- ============ HEADER ============ -->
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <div>
+        <h1>Solar System Simulator</h1>
+        <p>Keplerian orbits &middot; Halley's Comet at its true position</p>
+      </div>
+    </div>
+    <div class="clock">
+      <div class="clock-date" id="simDate">—</div>
+      <div class="clock-sub" id="simDateSub">—</div>
+    </div>
+  </header>
+
+  <!-- ============ CONTROL PANEL ============ -->
+  <aside id="panel">
+    <div class="panel-section">
+      <h2>Playback</h2>
+      <div class="row">
+        <button id="btnPlay" class="btn primary" title="Space">⏸ Pause</button>
+        <button id="btnToday" class="btn" title="Jump to real-world today">Today</button>
+        <button id="btnReset" class="btn" title="Reset view">Reset view</button>
+      </div>
+      <label class="slider-label">
+        <span>Time speed</span>
+        <span class="slider-value" id="speedVal">30 days/s</span>
+      </label>
+      <input type="range" id="speed" min="0" max="1000" value="350" />
+      <div class="row">
+        <button class="btn small" data-speed="1">1 d/s</button>
+        <button class="btn small" data-speed="30">30 d/s</button>
+        <button class="btn small" data-speed="365">1 yr/s</button>
+        <button class="btn small" data-speed="1825">5 yr/s</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h2>View</h2>
+      <label class="slider-label">
+        <span>Zoom</span>
+        <span class="slider-value" id="zoomVal">1.00×</span>
+      </label>
+      <input type="range" id="zoom" min="0" max="1000" value="500" />
+      <div class="toggles">
+        <label class="toggle"><input type="checkbox" id="tglOrbits" checked /><span>Orbits</span></label>
+        <label class="toggle"><input type="checkbox" id="tglLabels" checked /><span>Labels</span></label>
+        <label class="toggle"><input type="checkbox" id="tglTrails" checked /><span>Trails</span></label>
+        <label class="toggle"><input type="checkbox" id="tglStars" checked /><span>Stars</span></label>
+      </div>
+      <p class="hint">Drag to pan &middot; scroll to zoom &middot; click a body to focus</p>
+    </div>
+
+    <div class="panel-section">
+      <h2>Bodies</h2>
+      <div id="bodyList" class="body-list"></div>
+    </div>
+  </aside>
+
+  <!-- ============ INFO CARD ============ -->
+  <aside id="infoCard" class="hidden">
+    <button id="infoClose" class="info-close" title="Close">✕</button>
+    <div class="info-head">
+      <span class="info-swatch" id="infoSwatch"></span>
+      <div>
+        <h3 id="infoName">—</h3>
+        <p id="infoType">—</p>
+      </div>
+    </div>
+    <dl class="info-grid" id="infoGrid"></dl>
+    <p class="info-note" id="infoNote"></p>
+  </aside>
+
+  <!-- ============ LEGEND ============ -->
+  <footer id="legend">
+    <span class="legend-note">Distances compressed (r<sup>0.55</sup> scale) &middot; planet sizes exaggerated &middot; orbital periods &amp; comet position are real</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
