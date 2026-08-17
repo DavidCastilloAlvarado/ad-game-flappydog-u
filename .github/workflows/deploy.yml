@@ -16,7 +16,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
+      contents: 'write'
       id-token: 'write'
 
     steps:
@@ -65,3 +65,37 @@ jobs:
 
       - name: Print URL
         run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
+
+      - name: Create release tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --force --tags
+
+          latest=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n1)
+
+          # re-run of the same commit: release already exists, skip
+          if [ -n "$latest" ] && [ "$(git rev-list -n1 "$latest")" = "$(git rev-parse HEAD)" ]; then
+            echo "Release $latest already points at $(git rev-parse --short HEAD) — skipping"
+            exit 0
+          fi
+
+          if [ -z "$latest" ]; then
+            version="1.0.0"
+          else
+            v="${latest#v}"
+            major="${v%%.*}"
+            rest="${v#*.}"
+            minor="${rest%%.*}"
+            version="${major}.$((minor + 1)).0"
+          fi
+
+          echo "Creating release v${version} for $(git rev-parse --short HEAD)"
+          git tag "v${version}"
+          git push origin "v${version}"
+          gh release create "v${version}" \
+            --title "v${version}" \
+            --target "$(git rev-parse HEAD)" \
+            --generate-notes
